@@ -7,8 +7,9 @@ LanguagesObject;
 var repo;
 var repos_url;
 //get user info by email:
-$.get('https://api.github.com/search/users?q='+ emailInput +'+in%3Aemail&type=Users').done(function (data) {
+$.get('https://api.github.com/search/users?q='+ email +'+in%3Aemail&type=Users').done(function (data) {
   user = data;
+  console.log(user);
   repos_url = user.items[0].repos_url;
 
   //get urls to all of users repos
