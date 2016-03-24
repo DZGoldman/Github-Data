@@ -10,20 +10,30 @@ var Sequelize = require ('sequelize')
 var requestOptions = {
   url: '', //URL to hit
   method: 'GET', //Specify the method
-  headers: {'user-agent': 'dzgoldman'},
+  headers: {'user-agent': secrets.username},
   auth: {
-  user: 'dzgoldman',
+  user: secrets.username,
   password: secrets.password
   }
 }
 // var email = 'ckearns1210@gmail.com'
 //ray@raymasaki.com
 
-//TODO: configure sequalize
+//TODO: configure sequelize
+var sequelize
+
+
 var sequelize = new Sequelize('postgres://localhost/github-data', {
   dialect: 'postgres'
-})
+});
 
+// sequelize.authenticate().done(function(err) {
+  //     if (err) {
+  //       console.log('Unable to connect to the database:', err);
+  //     } else {
+  //       console.log('Connection has been established successfully.');
+  //     }
+  // });
 var Person = sequelize.define('user', {
   username: Sequelize.STRING,
   birthday: Sequelize.DATE
@@ -32,11 +42,12 @@ var Person = sequelize.define('user', {
 
 
 
-
 app.use(morgan('combined'));
 app.use(  express.static(__dirname+'/public'));
 
 app.get('/datatest', function (req, res) {
+
+
   sequelize.sync().then(function() {
   return Person.create({
     username: 'janedoe',
