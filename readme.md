@@ -1,9 +1,16 @@
 ToDo:
-- DONE Configure pg database
 
+- put on github in private repo
  - configure sequalize?
-- DONE Set up authenticaion
+
 - increase rate limit
 
-- Scraping emails from a google sheet...
+- Scraping emails from a google sheet
 - Public vs Private repos?
+
+- refactor get skills to use username instead of email (if it's more efficient, which I'm pretty sure it is)
+
+- refactor cattching errors
+Done:
+- DONE Set up authenticaion
+- DONE Configure pg database
