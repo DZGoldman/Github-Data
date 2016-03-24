@@ -7,16 +7,6 @@ var secrets = require('./secrets.js');
 var Sequelize = require ('sequelize')
 
 
-
-// var email = 'ckearns1210@gmail.com'
-
-//TODO: configure sequalize
-var sequelize = new Sequelize('postgres://localhost/github', {
-  dialect: 'postgres'
-})
-
-
-
 var requestOptions = {
   url: '', //URL to hit
   method: 'GET', //Specify the method
@@ -26,10 +16,34 @@ var requestOptions = {
   password: secrets.password
   }
 }
+// var email = 'ckearns1210@gmail.com'
+//ray@raymasaki.com
+
+//TODO: configure sequalize
+var sequelize = new Sequelize('postgres://localhost/github-data', {
+  dialect: 'postgres'
+})
+
+var Person = sequelize.define('user', {
+  username: Sequelize.STRING,
+  birthday: Sequelize.DATE
+});
+
+
+
+
 
 app.use(morgan('combined'));
 app.use(  express.static(__dirname+'/public'));
 
+app.get('/datatest', function (req, res) {
+  sequelize.sync().then(function() {
+  return Person.create({
+    username: 'janedoe',
+    birthday: new Date(1980, 6, 20)
+  })
+  })
+})
 
 app.get('/ratelimit', function (req, res) {
 
@@ -45,7 +59,6 @@ app.get('/ratelimit', function (req, res) {
 // ;
 //     output = body;
 //     output.humantime = time;
-
     res.send(body)
   })
 
