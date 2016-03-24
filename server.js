@@ -3,20 +3,19 @@ var app      = express();
 var morgan   = require ('morgan');
 var request = require('request');
 var pg = require('pg');
-var secrets = require('./secrets.js')
+var secrets = require('./secrets.js');
+var Sequelize = require ('sequelize')
 
 
 
 // var email = 'ckearns1210@gmail.com'
 
 //TODO: configure sequalize
-pg.connect('postgres://localhost/postgres', (err) => {
-   if (err) {
-      console.log(err);
-   } else {
-      console.log('connection successfull');
-   }
-});
+var sequelize = new Sequelize('postgres://localhost/github', {
+  dialect: 'postgres'
+})
+
+
 
 var requestOptions = {
   url: '', //URL to hit
