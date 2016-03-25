@@ -72,12 +72,12 @@ app.use(  express.static(__dirname+'/public'));
 
 app.get('/datatest', function (req, res) {
 
- var user = User.build({username: 'bobyasdfb'});
- user.location = 12345678;
- user.save()
-  .then(function () {
-  console.log('you saved a guy!');
- })
+ // var user = User.build({username: 'testman'});
+ // user.email = 'dzgoldman@wes';
+ // user.save()
+ //  .then(function () {
+ //  console.log('you saved a guy!');
+ // })
 
   // var person = Persontest.build({username: 'bob'});
   // person.birthday = Date.now()
@@ -90,13 +90,13 @@ app.get('/datatest', function (req, res) {
     // })
 
 
-    // sequelize.sync().then(function() {
-    //   return Persontest.create({
-    //     username: 'janedoe',
-    //     birthday: new Date(1980, 6, 20)
-    //   })
-    //
-    // })
+    sequelize.sync().then(function() {
+      return User.create({
+        username: 'testDan',
+        email: 'dannyg@gmai'
+      })
+
+    })
 
 
 
@@ -134,7 +134,9 @@ app.get('/sheet', function (req, res) {
        }
         // get array of all users (all rows in google docs)
         var usersArray =  data.feed.entry;
-        var len =usersArray.length
+        var len =usersArray.length;
+
+        // len = 20;
 
         var failCounter = 0;
 
@@ -183,7 +185,12 @@ app.get('/sheet', function (req, res) {
           if (index<len-1) {
 
             return saveUser(index+1)
-          }
+          };
+
+          if (index==len-1) {
+            res.send(failCounter)
+          };
+
         }).catch(function(error) {
           console.log('');
           console.log('FFFailed!');
@@ -194,11 +201,18 @@ app.get('/sheet', function (req, res) {
           failCounter++
           if (index<len-1) {
             return saveUser(index+1)
+          };
+
+          if (index==len-1) {
+            res.send(failCounter)
           }
+
         })
     }//end save user
     console.log('letsgo');
-    saveUser(0);
+    sequelize.sync().then(saveUser(0))
+
+
     console.log('');
     console.log('');
     console.log('');
