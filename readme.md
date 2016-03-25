@@ -10,6 +10,9 @@ ToDo:
 
 - refactor get skills to use username instead of email (if it's more efficient, which I'm pretty sure it is)
 
+- figure out location issue
+
+
 - refactor cattching errors
 Done:
 - DONE Set up authenticaion

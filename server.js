@@ -53,6 +53,7 @@ var Persontest = sequelize.define('persontest', {
 
 var User = sequelize.define('user', {
   username: Sequelize.STRING,
+  email: Sequelize.STRING,
   giturl: Sequelize.STRING,
   location: Sequelize.STRING,
   latitude: Sequelize.FLOAT,
@@ -71,9 +72,12 @@ app.use(  express.static(__dirname+'/public'));
 
 app.get('/datatest', function (req, res) {
 
- var user = User.build({username: 'bob'});
+ var user = User.build({username: 'bobyasdfb'});
  user.location = 12345678;
  user.save()
+  .then(function () {
+  console.log('you saved a guy!');
+ })
 
   // var person = Persontest.build({username: 'bob'});
   // person.birthday = Date.now()
@@ -118,6 +122,7 @@ app.get('/ratelimit', function (req, res) {
 })
 
 app.get('/sheet', function (req, res) {
+  // retrieve JSON from google docs file (20000 at a time:)
   var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json'
   request(
     {url: url1,
@@ -127,23 +132,21 @@ app.get('/sheet', function (req, res) {
        if (error) {
          throw error
        }
-       console.log('testing...');
-        var example = data.feed.entry[8].content['$t'];
-        // var size = data.feed.entry.length;
-        console.log(example);
-        var usersArray =  data.feed.entry
-        var counter = 0;
-        usersArray.forEach(function (row) {
-          counter++;
+        // get array of all users (all rows in google docs)
+        var usersArray =  data.feed.entry;
+        var len =usersArray.length
 
-          var infoArray = row.content['$t'].split(', ');
-          if (counter<20) {
-            console.log(infoArray);
-          }
-          var user = User.build
+        var failCounter = 0;
+
+
+        // recursive: for each row, create new User, give appropriate attributes (need case statement b/c JSON.parse isn't working!) and then save into DB. Upon successful save, move on to next row.
+        function saveUser(index) {
+          var infoArray = usersArray[index].content['$t'].split(', ');
+
+          var user = User.build()
           infoArray.forEach(function (dataPoint, index) {
 
-          switch (dataPoint.splice(0,3)) {
+          switch (dataPoint.slice(0,3)) {
 
             case 'ema':
               user.email = infoArray[index].slice(7, infoArray[index].length)
@@ -154,9 +157,9 @@ app.get('/sheet', function (req, res) {
             case 'git':
               user.giturl = infoArray[index].slice(8, infoArray[index].length)
               break;
-            case 'loc':
-              user.location = infoArray[index].slice(10, infoArray[index].length)
-              break;
+            // case 'loc':
+            //   user.location = infoArray[index].slice(10, infoArray[index].length)
+            //   break;
             case 'lat':
               user.latitude = infoArray[index].slice(10, infoArray[index].length)
               break;
@@ -173,12 +176,41 @@ app.get('/sheet', function (req, res) {
             default:
 
           }
-
         }) // end info loop
 
-        })
+        user.save()
+          .then(function () {
+          if (index<len-1) {
 
-  });
+            return saveUser(index+1)
+          }
+        }).catch(function(error) {
+          console.log('');
+          console.log('FFFailed!');
+          console.log('');
+          console.log(error);
+          console.log('');
+
+          failCounter++
+          if (index<len-1) {
+            return saveUser(index+1)
+          }
+        })
+    }//end save user
+    console.log('letsgo');
+    saveUser(0);
+    console.log('');
+    console.log('');
+    console.log('');
+    console.log('# of times you failed:', failCounter);
+    console.log('');
+    console.log('');
+    console.log('');
+
+
+
+
+  }); // end of request
 })
 
 app.get('/public', function(req,res){
