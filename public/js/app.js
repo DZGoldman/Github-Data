@@ -1,5 +1,22 @@
 console.log('i am in here');
 
+
+var ex;
+var url = 'https://spreadsheets.google.com/feeds/list/1i9hY1mML_JwF130b_8TqfunqFXoAetkLfU1NygnOHHQ/od6/public/basic?alt=json'
+$.getJSON(url).done(function (data) {
+  console.log(data);
+   ex = data.feed.entry[1].content;
+  console.log(ex);
+})
+
+
+
+
+
+
+
+
+
 var LanguagesObject = {};
 
 function getSkills(email) {

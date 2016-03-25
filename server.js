@@ -4,7 +4,8 @@ var morgan   = require ('morgan');
 var request = require('request');
 var pg = require('pg');
 var secrets = require('./secrets.js');
-var Sequelize = require ('sequelize')
+var Sequelize = require ('sequelize');
+var cheerio = require ('cheerio')
 
 
 var requestOptions = {
@@ -45,10 +46,21 @@ var sequelize = new Sequelize('postgres://localhost/githubdata', {
   // });
 
 //model
-var Person = sequelize.define('user', {
+var Person = sequelize.define('person', {
   username: Sequelize.STRING,
   birthday: Sequelize.DATE
 });
+
+// var User = sequelize.define('user', {
+//   usernam: Sequelize.STRING,
+//   giturl: Sequelize.STRING,
+//   location:
+//   latitude:
+//   longitude:
+//   distance_from_lt:
+//   sent_boolean
+//
+// });
 
 
 
@@ -100,6 +112,23 @@ app.get('/ratelimit', function (req, res) {
     res.send(body)
   })
 
+})
+
+app.get('/sheet', function (req, res) {
+  var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json'
+  request(
+    {url: url1,
+     json: true
+    },
+     function (error, response, data) {
+       if (error) {
+         throw error
+       }
+       console.log('testing...');
+        var test = data.feed.entry[1].content;
+       console.log(  test );
+
+  });
 })
 
 app.get('/public', function(req,res){
