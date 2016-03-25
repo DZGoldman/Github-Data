@@ -19,7 +19,7 @@ var requestOptions = {
 }
 
 
-pg.connect('postgres://localhost/githubdata', (err) => {
+pg.connect('postgres://localhost/githubdata-dev', (err) => {
    if (err) {
       console.log(err);
    } else {
@@ -33,7 +33,7 @@ pg.connect('postgres://localhost/githubdata', (err) => {
 var sequelize
 
 
-var sequelize = new Sequelize('postgres://localhost/githubdata', {
+var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
   dialect: 'postgres'
 });
 
@@ -46,21 +46,22 @@ var sequelize = new Sequelize('postgres://localhost/githubdata', {
   // });
 
 //model
-var Person = sequelize.define('person', {
+var Persontest = sequelize.define('persontest', {
   username: Sequelize.STRING,
   birthday: Sequelize.DATE
 });
 
-// var User = sequelize.define('user', {
-//   usernam: Sequelize.STRING,
-//   giturl: Sequelize.STRING,
-//   location:
-//   latitude:
-//   longitude:
-//   distance_from_lt:
-//   sent_boolean
-//
-// });
+var User = sequelize.define('user', {
+  username: Sequelize.STRING,
+  giturl: Sequelize.STRING,
+  location: Sequelize.STRING,
+  latitude: Sequelize.FLOAT,
+  longitude:Sequelize.FLOAT,
+  distance_from_lt: Sequelize.INTEGER,
+  sent_boolean: Sequelize.BOOLEAN,
+  skills: Sequelize.ARRAY(Sequelize.TEXT)
+
+});
 
 
 
@@ -70,11 +71,13 @@ app.use(  express.static(__dirname+'/public'));
 
 app.get('/datatest', function (req, res) {
 
+ var user = User.build({username: 'bob'});
+ user.location = 12345678;
+ user.save()
 
-
-  var person = Person.build({username: 'steve'});
-  person.birthday = Date.now()
-  person.save()
+  // var person = Persontest.build({username: 'bob'});
+  // person.birthday = Date.now()
+  // person.save()
     // .error(function (err) {
     //   console.log(err);
     // })
@@ -84,7 +87,7 @@ app.get('/datatest', function (req, res) {
 
 
     // sequelize.sync().then(function() {
-    //   return Person.create({
+    //   return Persontest.create({
     //     username: 'janedoe',
     //     birthday: new Date(1980, 6, 20)
     //   })
@@ -125,8 +128,55 @@ app.get('/sheet', function (req, res) {
          throw error
        }
        console.log('testing...');
-        var test = data.feed.entry[1].content;
-       console.log(  test );
+        var example = data.feed.entry[8].content['$t'];
+        // var size = data.feed.entry.length;
+        console.log(example);
+        var usersArray =  data.feed.entry
+        var counter = 0;
+        usersArray.forEach(function (row) {
+          counter++;
+
+          var infoArray = row.content['$t'].split(', ');
+          if (counter<20) {
+            console.log(infoArray);
+          }
+          var user = User.build
+          infoArray.forEach(function (dataPoint, index) {
+
+          switch (dataPoint.splice(0,3)) {
+
+            case 'ema':
+              user.email = infoArray[index].slice(7, infoArray[index].length)
+              break;
+            case 'use':
+              user.username = infoArray[index].slice(9, infoArray[index].length)
+              break;
+            case 'git':
+              user.giturl = infoArray[index].slice(8, infoArray[index].length)
+              break;
+            case 'loc':
+              user.location = infoArray[index].slice(10, infoArray[index].length)
+              break;
+            case 'lat':
+              user.latitude = infoArray[index].slice(10, infoArray[index].length)
+              break;
+            case 'lon':
+              user.longitude = infoArray[index].slice(11, infoArray[index].length)
+              break;
+            case 'dist':
+              user.distance_from_lt = infoArray[index].slice(16, infoArray[index].length)
+              break;
+            case 'sen':
+              user.sent_boolean = infoArray[index].slice(13, infoArray[index].length)
+              break;
+
+            default:
+
+          }
+
+        }) // end info loop
+
+        })
 
   });
 })
