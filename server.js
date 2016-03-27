@@ -46,20 +46,32 @@ var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
   // });
 
 //model
-var Persontest = sequelize.define('persontest', {
-  username: Sequelize.STRING,
-  birthday: Sequelize.DATE
-});
+// var Persontest = sequelize.define('persontest', {
+//   username: Sequelize.STRING,
+//   birthday: Sequelize.DATE
+// });
 
 var User = sequelize.define('user', {
   username: Sequelize.STRING,
-  email: Sequelize.STRING,
-  giturl: Sequelize.STRING,
+  email: {
+          type:Sequelize.STRING,
+          validate:{
+          isEmail: true
+          }
+        },
+  giturl: {
+          type:Sequelize.STRING,
+          validate:{
+          isUrl: true
+          }
+        },
   location: Sequelize.STRING,
   latitude: Sequelize.FLOAT,
   longitude:Sequelize.FLOAT,
   distance_from_lt: Sequelize.INTEGER,
-  sent_boolean: Sequelize.BOOLEAN,
+  sent_boolean: {
+                type:Sequelize.BOOLEAN,
+                defaultValue: false},
   skills: Sequelize.ARRAY(Sequelize.TEXT)
 
 });
@@ -121,20 +133,40 @@ app.get('/ratelimit', function (req, res) {
 
 })
 
-app.get('/sheet', function (req, res) {
+app.get('/sheet/:count', function (req, res) {
+  var count = +req.params.count
+  console.log(count);
+  console.log(typeof count);
   // retrieve JSON from google docs file (20000 at a time:)
-  var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json'
-  request(
-    {url: url1,
+  var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json',
+  url2= 'https://spreadsheets.google.com/feeds/list/1uwbaWOQl54RphdZVpHogQNxvnYuXq2_zjBOnr1lJDu4/od6/public/basic?alt=json',
+  url3 = 'https://spreadsheets.google.com/feeds/list/1tuSK3jDjmzhI0YHs2NAb-zAQTb2JJWc4kT3gcBXHA6o/od6/public/basic?alt=json',
+// 4 too big
+  url4 = 'https://spreadsheets.google.com/feeds/list/1DudUIDsoG_0_2zi-lTceBJC9NilTyea5pWwKFA7v8cA/od6/public/basic?alt=json',
+  url5 = 'https://spreadsheets.google.com/feeds/list/1Q5KZDWJkidgCy80jPhTbX2TSy83LE6MoY8s9W73VofE/od6/public/basic?alt=json',
+  url6 = 'https://spreadsheets.google.com/feeds/list/1dX6jz7TlvpD_JbHkgYQ_78AiZpowj5GVNiIKgO04zno/od6/public/basic?alt=json',
+  url7 = 'https://spreadsheets.google.com/feeds/list/1Pc75q7CNilhUt-gwfyssuKB6sG-Hkhh_zHgYX54rGtA/od6/public/basic?alt=json';
+
+var urls = [url1,url2,url3,url4,url5,url6,url7]
+
+  var r =request(
+    {url: urls[count],
      json: true
     },
      function (error, response, data) {
        if (error) {
+         console.log('is this the problem?');
          throw error
        }
         // get array of all users (all rows in google docs)
         var usersArray =  data.feed.entry;
         var len =usersArray.length;
+
+        // var len =  500;
+        var first = usersArray[1].content['$t'];
+        console.log('');
+        console.log(len, first);
+        console.log('');
 
         // len = 20;
 
@@ -151,17 +183,17 @@ app.get('/sheet', function (req, res) {
           switch (dataPoint.slice(0,3)) {
 
             case 'ema':
-              user.email = infoArray[index].slice(7, infoArray[index].length)
+              user.email = infoArray[index].slice(7, infoArray[index].length).trim()
               break;
             case 'use':
-              user.username = infoArray[index].slice(9, infoArray[index].length)
+              user.username = infoArray[index].slice(9, infoArray[index].length).trim()
               break;
             case 'git':
-              user.giturl = infoArray[index].slice(8, infoArray[index].length)
+              user.giturl = infoArray[index].slice(8, infoArray[index].length).trim()
               break;
-            // case 'loc':
-            //   user.location = infoArray[index].slice(10, infoArray[index].length)
-            //   break;
+            case 'loc':
+              user.location = infoArray[index].slice(10, infoArray[index].length).trim()
+              break;
             case 'lat':
               user.latitude = infoArray[index].slice(10, infoArray[index].length)
               break;
@@ -188,15 +220,19 @@ app.get('/sheet', function (req, res) {
           };
 
           if (index==len-1) {
-            res.send(failCounter)
+
+            console.log('');
+            console.log('# of times you failed:', failCounter);
+            console.log('');
+            r.abort()
           };
 
-        }).catch(function(error) {
-          console.log('');
-          console.log('FFFailed!');
-          console.log('');
+        })
+
+        .catch(function(error) {
+          console.log('Failed!');
           console.log(error);
-          console.log('');
+
 
           failCounter++
           if (index<len-1) {
@@ -204,27 +240,28 @@ app.get('/sheet', function (req, res) {
           };
 
           if (index==len-1) {
-            res.send(failCounter)
+            console.log('');
+            console.log('# of times you failed:', failCounter);
+            console.log('');
+            return failCounter
           }
 
         })
+
+
+
     }//end save user
     console.log('letsgo');
     sequelize.sync().then(saveUser(0))
 
-
-    console.log('');
-    console.log('');
-    console.log('');
-    console.log('# of times you failed:', failCounter);
-    console.log('');
-    console.log('');
-    console.log('');
-
-
-
+    //
+    // if (count<urls.length) {
+    //     request('/sheet/'+(count+1) )
+    // }
 
   }); // end of request
+
+
 })
 
 app.get('/public', function(req,res){
