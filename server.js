@@ -132,16 +132,23 @@ function rateLimit(req, res) {
 }
 app.get('/ratelimit', rateLimit)
 
+
+var reqCount = 0;
 app.get('/sheet/:count', function (req, res) {
+  if (reqCount==0) {
+    console.log('reqCount', reqCount);
+    reqCount++
+
+    console.log('START');
+      console.log(req.url);
   sequelize.sync().then(function () {
     console.log('tables all synced up');
   })
   var count = +req.params.count
   console.log(count);
-  console.log(typeof count);
   // retrieve JSON from google docs file (20000 at a time:)
   var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json',
-  url2= 'https://spreadsheets.google.com/feeds/list/1uwbaWOQl54RphdZVpHogQNxvnYuXq2_zjBOnr1lJDu4/od6/public/basic?alt=json',
+  url2 = 'https://spreadsheets.google.com/feeds/list/1uwbaWOQl54RphdZVpHogQNxvnYuXq2_zjBOnr1lJDu4/od6/public/basic?alt=json',
   url3 = 'https://spreadsheets.google.com/feeds/list/1tuSK3jDjmzhI0YHs2NAb-zAQTb2JJWc4kT3gcBXHA6o/od6/public/basic?alt=json',
   // 4 too big
   url4 = 'https://spreadsheets.google.com/feeds/list/1DudUIDsoG_0_2zi-lTceBJC9NilTyea5pWwKFA7v8cA/od6/public/basic?alt=json',
@@ -151,7 +158,7 @@ app.get('/sheet/:count', function (req, res) {
 
   var urls = [url1,url2,url3,url4,url5,url6,url7]
 
-  var r =request(
+  request(
     {url: urls[count],
      json: true
     },
@@ -256,7 +263,7 @@ app.get('/sheet/:count', function (req, res) {
     // }
 
   }); // end of request
-
+}//end if
 
 })
 
@@ -361,6 +368,12 @@ var getShmails =function (req, res) {
 app.get('/getSkillsByEmail/:email', getShmails)
 
 app.get('/getSkillsByUrl', function (req, res) {
+  console.log('START');
+
+
+
+  sequelize.sync().then(function () {
+
   var errorCounter=0;
   User.findAll({
     where:{skills_found:false},
@@ -421,12 +434,8 @@ app.get('/getSkillsByUrl', function (req, res) {
     } // end getSkills
 
 
-    getSkills(0)
-
-
-
-
-
+      getSkills(0)
+    })
   })
 })
 
