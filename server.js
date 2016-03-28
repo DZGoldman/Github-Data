@@ -362,7 +362,13 @@ var getShmails =function (req, res) {
 app.get('/getSkillsByEmail/:email', getShmails)
 
 app.get('/getSkillsByUrl', function (req, res) {
-
+  User.findAll({
+    where:{skills_found:false},
+    limit: 5000
+    }
+  }).then(function (users) {
+    console.log(users);
+  })
 })
 
 app.get('/test', function (req, res) {
