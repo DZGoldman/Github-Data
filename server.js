@@ -29,9 +29,6 @@ pg.connect('postgres://localhost/githubdata-dev', (err) => {
 // var email = 'ckearns1210@gmail.com'
 //ray@raymasaki.com
 
-//TODO: configure sequelize
-var sequelize
-
 
 var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
   dialect: 'postgres'
@@ -45,11 +42,6 @@ var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
   //     }
   // });
 
-//model
-// var Persontest = sequelize.define('persontest', {
-//   username: Sequelize.STRING,
-//   birthday: Sequelize.DATE
-// });
 
 var User = sequelize.define('user', {
   username: Sequelize.STRING,
@@ -72,7 +64,10 @@ var User = sequelize.define('user', {
   sent_boolean: {
                 type:Sequelize.BOOLEAN,
                 defaultValue: false},
-  skills: Sequelize.ARRAY(Sequelize.TEXT)
+  skills: Sequelize.ARRAY(Sequelize.TEXT),
+  skills_found:{
+                type:Sequelize.BOOLEAN,
+                defaultValue: false}
 
 });
 
@@ -82,58 +77,67 @@ var User = sequelize.define('user', {
 app.use(morgan('combined'));
 app.use(  express.static(__dirname+'/public'));
 
-app.get('/datatest', function (req, res) {
 
- // var user = User.build({username: 'testman'});
- // user.email = 'dzgoldman@wes';
- // user.save()
- //  .then(function () {
- //  console.log('you saved a guy!');
- // })
+app.get('/getskillscheerio', function (req, res) {
+ User.findAll().then(function (users) {
+   var len =(users.length);
 
-  // var person = Persontest.build({username: 'bob'});
-  // person.birthday = Date.now()
-  // person.save()
-    // .error(function (err) {
-    //   console.log(err);
-    // })
-    // .success(function () {
-    //   console.log('yay');
-    // })
+  //  users.forEach(function (user) {
+  //    console.log(user.giturl);
+  //  })
 
+   function getSkills(index) {
 
-    sequelize.sync().then(function() {
-      return User.create({
-        username: 'testDan',
-        email: 'dannyg@gmai'
-      })
+     var giturl=users[index].giturl
+     request(giturl, function (err, res, html) {
+       $ = cheerio.load(html);
+      //  console.log( $('span'));
+       $("span[itemprop='programmingLanguage']").each(function (index,span) {
+         console.log('h');
+      console.log(  $(span).text())
+       })
+      //  $('span').each(function (span) {
+      //    $span = $(span)
+      //    console.log($span.attr('itemprop'))
+      //  })
+     })
+    if (index<10000) {
+      // getSkills(index+1)
+    }
+   };
+   getSkills(0)
 
+ })
+})
+
+function rateLimit(req, res) {
+  User.count().then(function (c) {
+      console.log(c);
+    })
+    requestOptions.url='https://api.github.com/rate_limit'
+    request(requestOptions,function (err, resp, body) {
+  //     var unixTime =body.resources.rate.reset;
+  //
+  //     time = new Date(unixTime * 1000),datevalues =
+  //
+  //    String(date.getHours() )+':'+
+  //    String(date.getMinutes())+':'+
+  //    String(date.getSeconds())
+  // ;
+  //     output = body;
+  //     output.humantime = time;
+      res.send(body)
     })
 
-
-
-})
-
-app.get('/ratelimit', function (req, res) {
-
-  requestOptions.url='https://api.github.com/rate_limit'
-  request(requestOptions,function (err, resp, body) {
-//     var unixTime =body.resources.rate.reset;
-//
-//     time = new Date(unixTime * 1000),datevalues =
-//
-//    String(date.getHours() )+':'+
-//    String(date.getMinutes())+':'+
-//    String(date.getSeconds())
-// ;
-//     output = body;
-//     output.humantime = time;
-    res.send(body)
-  })
-
-})
+}
+app.get('/ratelimit', rateLimit)
 
 app.get('/sheet/:count', function (req, res) {
+  sequelize.sync({
+    force:true
+  }).then(function () {
+    console.log('tables all synced up');
+  })
   var count = +req.params.count
   console.log(count);
   console.log(typeof count);
@@ -141,13 +145,13 @@ app.get('/sheet/:count', function (req, res) {
   var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json',
   url2= 'https://spreadsheets.google.com/feeds/list/1uwbaWOQl54RphdZVpHogQNxvnYuXq2_zjBOnr1lJDu4/od6/public/basic?alt=json',
   url3 = 'https://spreadsheets.google.com/feeds/list/1tuSK3jDjmzhI0YHs2NAb-zAQTb2JJWc4kT3gcBXHA6o/od6/public/basic?alt=json',
-// 4 too big
+  // 4 too big
   url4 = 'https://spreadsheets.google.com/feeds/list/1DudUIDsoG_0_2zi-lTceBJC9NilTyea5pWwKFA7v8cA/od6/public/basic?alt=json',
   url5 = 'https://spreadsheets.google.com/feeds/list/1Q5KZDWJkidgCy80jPhTbX2TSy83LE6MoY8s9W73VofE/od6/public/basic?alt=json',
   url6 = 'https://spreadsheets.google.com/feeds/list/1dX6jz7TlvpD_JbHkgYQ_78AiZpowj5GVNiIKgO04zno/od6/public/basic?alt=json',
   url7 = 'https://spreadsheets.google.com/feeds/list/1Pc75q7CNilhUt-gwfyssuKB6sG-Hkhh_zHgYX54rGtA/od6/public/basic?alt=json';
 
-var urls = [url1,url2,url3,url4,url5,url6,url7]
+  var urls = [url1,url2,url3,url4,url5,url6,url7]
 
   var r =request(
     {url: urls[count],
@@ -211,42 +215,35 @@ var urls = [url1,url2,url3,url4,url5,url6,url7]
 
           }
         }) // end info loop
+        User.count().then(function (c) {
+            if (index< len-1) {
+
 
         user.save()
           .then(function () {
-          if (index<len-1) {
-
             return saveUser(index+1)
-          };
-
-          if (index==len-1) {
-
-            console.log('');
-            console.log('# of times you failed:', failCounter);
-            console.log('');
-            r.abort()
-          };
-
         })
 
         .catch(function(error) {
           console.log('Failed!');
           console.log(error);
 
-
           failCounter++
           if (index<len-1) {
             return saveUser(index+1)
           };
 
-          if (index==len-1) {
-            console.log('');
-            console.log('# of times you failed:', failCounter);
-            console.log('');
-            return failCounter
-          }
 
         })
+      }else{
+        console.log('youre done tho!');
+
+                    console.log('');
+                    console.log('# of times you failed:', failCounter);
+                    console.log('');
+      }
+    }
+  )
 
 
 
@@ -274,12 +271,7 @@ app.get('/', function(req,res){
 
 
 
-app.listen(3000, function(){
-  console.info('Listening on  port 3000...')
-})
-
-
-app.get('/getSkillsByEmail/:email', function (req, res) {
+var getShmails =function (req, res) {
 
   var email = req.params.email
 
@@ -366,14 +358,29 @@ app.get('/getSkillsByEmail/:email', function (req, res) {
 
     }) // end get repos
   }) // end get user
+};
+app.get('/getSkillsByEmail/:email', getShmails)
+
+app.get('/getSkillsByUrl', function (req, res) {
 
 })
 
+app.get('/test', function (req, res) {
+  // request('/ratelimit', function (err, res, data) {
+  //   console.log(err, res,data);
+  // })
+  res.send(testing( function (data) {
+    res.json(data)
+  })
+)
+})
 
-
-
-
-//TODO: make seperate module
+function testing(cb) {
+  requestOptions.url='https://api.github.com/users/dzgoldman'
+   request(requestOptions, function (error, response, data) {
+    cb(data)
+  })
+}
 
 function getSkills(email) {
     var LanguagesObject = {};
@@ -449,4 +456,11 @@ function getSkills(email) {
     }) // end get repos
   }) // end get user
 
+
 }
+
+
+
+app.listen(3000, function(){
+  console.info('Listening on  port 3000...')
+})

@@ -1,19 +1,31 @@
 ToDo:
 
-- put on github in private repo
- - configure sequalize?
 
-- increase rate limit
+- fix sheet important so it doesn't double up
+- set up route that,
+for 5000 records where skills aren't found
+take in url,
+strips for username,
+gets all users repos,
+gets all languages,
+sorts them,
+updates user for skills and "skills found"
+- restructure
+- hourly chron job
 
-- Scraping emails from a google sheet
-- Public vs Private repos?
-
-- refactor get skills to use username instead of email (if it's more efficient, which I'm pretty sure it is)
-
-- figure out location issue
 
 
-- refactor cattching errors
+
+
 Done:
 - DONE Set up authenticaion
 - DONE Configure pg database
+- put on github in private repo
+
+
+ - configure sequalize?
+
+ - increase rate limit
+ - Scraping emails from a google sheet
+ - Public vs Private repos?- figure out location issue - done?
+- refactor cattching errors
