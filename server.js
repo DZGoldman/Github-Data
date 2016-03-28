@@ -133,9 +133,7 @@ function rateLimit(req, res) {
 app.get('/ratelimit', rateLimit)
 
 app.get('/sheet/:count', function (req, res) {
-  sequelize.sync({
-    force:true
-  }).then(function () {
+  sequelize.sync().then(function () {
     console.log('tables all synced up');
   })
   var count = +req.params.count
@@ -250,6 +248,7 @@ app.get('/sheet/:count', function (req, res) {
     }//end save user
     console.log('letsgo');
     sequelize.sync().then(saveUser(0))
+    console.log('done and done');
 
     //
     // if (count<urls.length) {
@@ -362,6 +361,7 @@ var getShmails =function (req, res) {
 app.get('/getSkillsByEmail/:email', getShmails)
 
 app.get('/getSkillsByUrl', function (req, res) {
+  var errorCounter=0;
   User.findAll({
     where:{skills_found:false},
     limit: 500
@@ -377,14 +377,14 @@ app.get('/getSkillsByUrl', function (req, res) {
       //get repors
       request(requestOptions, function (error, response, data) {
         if (error) {
-          console.log('errorrrr!');
           throw error
         };
 
-
        var repos= JSON.parse(data);
        var languagesHash ={};
-       if (data.repos) {
+       var status=response.statusCode;
+       console.log(status);
+       if (status>=200 && status <=299 ) {
 
 
         repos.forEach(function (repo) {
@@ -409,7 +409,9 @@ app.get('/getSkillsByUrl', function (req, res) {
            }
          })
        }else{
-         console.log('nope...');
+         errorCounter++
+         console.log('nope...', errorCounter);
+
         getSkills(userIndex+1)
        }
 
@@ -429,13 +431,22 @@ app.get('/getSkillsByUrl', function (req, res) {
 })
 
 app.get('/test', function (req, res) {
+  var requestOptions = {
+    method: 'GET', //Specify the method
+    headers: {'user-agent': secrets.username},
+    auth: {
+    user: secrets.username,
+    password: secrets.password
+    }
+  }
+  request.get('https://api.github.com/users/Alejandro-P-2011-2243/repos', requestOptions)
   // request('/ratelimit', function (err, res, data) {
   //   console.log(err, res,data);
   // })
-  res.send(testing( function (data) {
-    res.json(data)
-  })
-)
+//   res.send(testing( function (data) {
+//     res.json(data)
+//   })
+// )
 })
 
 function testing(cb) {
