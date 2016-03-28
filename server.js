@@ -364,10 +364,57 @@ app.get('/getSkillsByEmail/:email', getShmails)
 app.get('/getSkillsByUrl', function (req, res) {
   User.findAll({
     where:{skills_found:false},
-    limit: 5000
-    }
+    limit: 500
   }).then(function (users) {
-    console.log(users);
+    var len = users.length
+    function getSkills(userIndex) {
+      var user = users[userIndex];
+      var username = user.giturl.split('https://github.com/')[1];
+      var url = 'https://api.github.com/users/'+username+'/repos'
+      requestOptions.url = url;
+
+      //get repors
+      request(requestOptions, function (error, response, data) {
+        if (error) {
+          console.log('errorrrr!');
+          throw error
+        };
+       var repos= JSON.parse(data);
+       var languagesHash ={};
+        repos.forEach(function (repo) {
+          var language = repo.language;
+          if (language && !languagesHash[language] ) {
+            languagesHash[language]=true
+          }
+        }) //end for each repo
+        var skills = [];
+        for (language in languagesHash){
+          skills.push(language)
+        }
+         console.log(skills)
+         user.update({
+           skills:skills,
+           skills_found: true
+         }).then(function (um) {
+           console.log('user updated', userIndex);
+
+           if (userIndex<len-1) {
+             getSkills(userIndex+1)
+           }
+         })
+
+      }) // end request
+
+
+    } // end getSkills
+
+
+    getSkills(0)
+
+
+
+
+
   })
 })
 
