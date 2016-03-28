@@ -371,6 +371,7 @@ app.get('/getSkillsByUrl', function (req, res) {
       var user = users[userIndex];
       var username = user.giturl.split('https://github.com/')[1];
       var url = 'https://api.github.com/users/'+username+'/repos'
+      console.log(url);
       requestOptions.url = url;
 
       //get repors
@@ -379,8 +380,13 @@ app.get('/getSkillsByUrl', function (req, res) {
           console.log('errorrrr!');
           throw error
         };
+
+
        var repos= JSON.parse(data);
        var languagesHash ={};
+       if (data.repos) {
+
+
         repos.forEach(function (repo) {
           var language = repo.language;
           if (language && !languagesHash[language] ) {
@@ -402,6 +408,10 @@ app.get('/getSkillsByUrl', function (req, res) {
              getSkills(userIndex+1)
            }
          })
+       }else{
+         console.log('nope...');
+        getSkills(userIndex+1)
+       }
 
       }) // end request
 
