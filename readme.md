@@ -29,3 +29,7 @@ Done:
  - Scraping emails from a google sheet
  - Public vs Private repos?- figure out location issue - done?
 - refactor cattching errors
+
+
+3/29
+-Testing 5000 fetch; strange bug where the route gets recalled about scraping about 500 users; build a workaround (still don't understand the source of the problem, but it works; prevent route from being recalled until it's done scraping; so problem)

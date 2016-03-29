@@ -1,373 +1,176 @@
-var express  = require('express'),
- app      = express(),
- morgan   = require ('morgan'),
- request = require('request'),
- pg = require('pg'),
- secrets = require('./secrets.js'),
- Sequelize = require ('sequelize'),
- sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
-  dialect: 'postgres'
+var express = require('express'),
+  app = express(),
+  morgan = require('morgan'),
+  request = require('request'),
+  pg = require('pg'),
+  secrets = require('./secrets.js'),
+  Sequelize = require('sequelize'),
+  sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
+    dialect: 'postgres'
   }),
- User = sequelize.import(__dirname + "/User"),
- sheetHelpers = require('./Helpers/sheet-helpers.js'),
- skillHelpers = require('./Helpers/skills-helpers.js')
-
+  User = sequelize.import(__dirname + "/User"),
+  sheetHelpers = require('./Helpers/sheet-helpers.js'),
+  skillHelpers = require('./Helpers/skills-helpers.js')
 
 var requestOptions = {
   url: '', //URL to hit
   method: 'GET', //Specify the method
-  headers: {'user-agent': secrets.username},
+  headers: {
+    'user-agent': secrets.username
+  },
   auth: {
-  user: secrets.username,
-  password: secrets.password
+    user: secrets.username,
+    password: secrets.password
   }
 }
 
-
 pg.connect('postgres://localhost/githubdata-dev', (err) => {
-   if (err) {
-      console.log(err);
-   } else {
-      console.log('connection successfull');
-   }
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('connection successfull');
+  }
 });
 
-
 app.use(morgan('combined'));
-app.use(  express.static(__dirname+'/public'));
-
 
 //GET RATE LIMIT
 function rateLimit(req, res) {
-  sequelize.sync().then(function () {
-  User.count().then(function (c) {
+  sequelize.sync().then(function() {
+    User.count().then(function(c) {
       console.log(c);
     })
-    requestOptions.url='https://api.github.com/rate_limit'
-    request(requestOptions,function (err, resp, body) {
+    requestOptions.url = 'https://api.github.com/rate_limit'
+    request(requestOptions, function(err, resp, body) {
+
       res.send(body)
     })
   })
-  }
+};
 app.get('/ratelimit', rateLimit)
-
-
-
-
 // GET GOOGLE SHEET
-var reqCount = 0;
-app.get('/sheet/:count', function (req, res) {
-  if (reqCount==0) {
+reqCount = 0;
+app.get('/sheet/:count', function(req, res) {
+  if (reqCount == 0) {
     reqCount++
-    console.log('START');
-    sequelize.sync().then(function () {
+    sequelize.sync().then(function() {
       console.log('tables synced up');
     })
-  var count = +req.params.count
-  console.log(count);
-  // retrieve JSON from google docs file (20000 at a time:)
-var urls = sheetHelpers.urls
-  request(
-    {url: urls[count],
-     json: true
-    },
-     function (error, response, data) {
-       if (error) {
-         throw error
-       }
+    var count = +req.params.count
+      // retrieve JSON from google docs file (20000 at a time:)
+    var urls = sheetHelpers.urls
+    request({
+        url: urls[count],
+        json: true
+      },
+      function(error, response, data) {
+        if (error) {
+          throw error
+        }
         // get array of all users (all rows in google docs)
         var usersArray = data.feed.entry;
-        var len =usersArray.length;
-        console.log(len);
+        var len = usersArray.length;
         var failCounter = 0;
         // recursive: for each row, create new User, give appropriate attributes (need case statement b/c JSON.parse isn't working!) and then save into DB. Upon successful save, move on to next row.
         function saveUser(index) {
           var infoArray = usersArray[index].content['$t'].split(', ');
           var user = User.build()
-          sheetHelpers.buildUser(infoArray,user)
-          User.count().then(function (c) {
-              if (index< len-1) {
-          user.save()
-            .then(function () {
-              return saveUser(index+1)
+          sheetHelpers.buildUser(infoArray, user)
+          User.count().then(function(c) {
+            if (index < len - 1) {
+              user.save()
+                .then(function() {
+                  return saveUser(index + 1)
+                })
+                .catch(function(error) {
+                  console.log('Failed!', error);
+                  failCounter++
+                  if (index < len - 1) {
+                    return saveUser(index + 1)
+                  };
+                })
+            } else {
+              console.log('# of times you failed:', failCounter);
+            }
           })
-          .catch(function(error) {
-            console.log('Failyed!',error);
-            failCounter++
-            if (index<len-1) {
-              return saveUser(index+1)
-            };
-          })
-        }else{
-          console.log('# of times you failed:', failCounter);
-        }
-    }
-  )}//end save user
-  sequelize.sync().then(saveUser(0))
-  console.log('done and done');
-  }); // end of request
-}//end if
+        } //end save user
+        sequelize.sync().then(saveUser(0))
+        console.log('done and done');
+      }); // end of request
+  } //end if
 
 })
-
-
 
 // GET 5000 USER'S SKILLS
-app.get('/getSkillsByUrl', function (req, res) {
-  if (reqCount==0){
-      reqCount++
-  console.log('START');
-  sequelize.sync().then(function () {
+app.get('/getSkillsByUrl', function(req, res) {
 
-  var errorCounter=0;
-  User.findAll({
-    where:{skills_found:false},
-    limit: 4900
-  }).then(function (users) {
+  var limit = 5000;
 
-
-    var len = users.length
-    function getSkills(userIndex) {
-      var user = users[userIndex];
-      var username = user.giturl.split('https://github.com/')[1];
-      var url = 'https://api.github.com/users/'+username+'/repos'
-      console.log(url);
-      requestOptions.url = url;
-      //get repos
-      request(requestOptions, function (error, response, data) {
-        if (error) {
-          throw error
-        };
-        var status=response.statusCode;
-        console.log(status);
-
-      if (status>=200 && status <=299 ) {
-       var repos= JSON.parse(data);
-       var skills = skillHelpers.getLanguages(repos);
-         console.log(skills)
-         user.update({skills:skills, skills_found: true})
-            .then(function () {
-           console.log('user updated', userIndex);
-           if (userIndex<len-1) {
-             getSkills(userIndex+1)
-           }
-         })
-       }else{
-         errorCounter++
-         console.log('nope...', errorCounter);
-        getSkills(userIndex+1)
-       }
-      }) // end request
-    } // end getSkills
-
-      getSkills(0)
-
-    })
-  })
-}
+  requestOptions.url = 'https://api.github.com/rate_limit'
+  request(requestOptions, function(err, resp, body) {
+      if (JSON.parse(body).resources.core.remaining < limit) {
+        console.log('api limit is too low');
+        res.send(body)
+      } else {
+        console.log("getting", limit, "users skills");
+        console.log('START');
+        sequelize.sync().then(function() {
+          var errorCounter = 0;
+          User.findAll({
+            where: {
+              skills_found: false
+            },
+            limit: limit
+          }).then(function(users) {
+            var len = users.length;
+            function getSkills(userIndex) {
+              var user = users[userIndex];
+              var username = user.giturl.split('https://github.com/')[1];
+              var url = 'https://api.github.com/users/' + username + '/repos';
+              requestOptions.url = url;
+              //get repos
+              request(requestOptions, function(error, response, data) {
+                  if (error) {
+                    throw error
+                  };
+                  var status = response.statusCode;
+                  if (status >= 200 && status <= 299) {
+                    var repos = JSON.parse(data);
+                    var skills = skillHelpers.getLanguages(repos);
+                    user.update({skills: skills, skills_found: true})
+                      .then(function() {
+                        console.log('user updated', userIndex);
+                        skillHelpers.recurIfNotDone(userIndex, len, getSkills)
+                      })
+                  } else {
+                    errorCounter++
+                    user.update({
+                        skills_found: true
+                      })
+                      // console.log('nope...', errorCounter);
+                    skillHelpers.recurIfNotDone(userIndex, len, getSkills)
+                  }
+                }) // end request
+            } // end getSkills
+            getSkills(0)
+          })
+        })
+      }
+    }) //end request limit
 })
 
 
+app.get('/test', function(req, res) {
+  rateLimit(req, res)
 
-
-app.get('/test', function (req, res) {
-  var requestOptions = {
-    method: 'GET', //Specify the method
-    headers: {'user-agent': secrets.username},
-    auth: {
-    user: secrets.username,
-    password: secrets.password
-    }
-  }
-  request.get('https://api.github.com/users/Alejandro-P-2011-2243/repos', requestOptions)
-  // request('/ratelimit', function (err, res, data) {
-  //   console.log(err, res,data);
-  // })
 
 })
 
-function testing(cb) {
-  requestOptions.url='https://api.github.com/users/dzgoldman'
-   request(requestOptions, function (error, response, data) {
-    cb(data)
-  })
-}
 
-function getSkills(email) {
-    var LanguagesObject = {};
-
-
-  // var repo;
-  var repos_url;
-  //get user info by email:
-  requestOptions.url= 'https://api.github.com/search/users?q='+ email +'+in%3Aemail&type=Users';
-
-  request(requestOptions, function (err, response, data) {
-    if (err) {
-      console.log(err);
-    }
-    var user = JSON.parse(data);
-
-    repos_url = user.items[0].repos_url;
-
-    //get urls to all of users repos:
-    requestOptions.url= repos_url
-
-    request(requestOptions, function (err, response, data) {
-      if (err) {
-        console.log(err);
-      }
-      var allLanguages = []
-      //for each repo, push url to the repo's language object:
-      var urls = JSON.parse(data);
-      urls.forEach(function (repo) {
-        // console.log(repo.languages_url);
-        if (repo.languages_url) {
-          allLanguages.push(repo.languages_url);
-        }
-      });
-
-      //gather data for each language, reccursively
-      var languageCount = allLanguages.length;
-      function addLanguages(index) {
-        requestOptions.url= allLanguages[index];
-        request(requestOptions, function (err, response, data) {
-          if (err) {
-            console.log(err);
-          }
-          //make sure it is indeed a languageList object
-          if (typeof languageList=='object') {
-            languageList = JSON.parse(data);
-            //track characters for each language
-            for(var language in languageList){
-              if (LanguagesObject[language]) {
-                LanguagesObject[language]+= languageList[language];
-                // console.log(LanguagesObject);
-              }else{
-                LanguagesObject[language]=languageList[language]
-              }
-            }
-          };
-          if (index==languageCount-1) {
-            console.log('output:');
-            res.send(LanguagesObject)
-            // res.send(LanguagesObject)
-            console.log('done');
-          }
-        })
-        if (index<languageCount) {
-          addLanguages(index+1)
-        }
-      }
-
-       addLanguages(0);
-
-    }) // end get repos
-  }) // end get user
-
-
-}
-
-var getShmails =function (req, res) {
-
-  var email = req.params.email
-
-  var LanguagesObject = {};
-
-  // var repo;
-  var repos_url;
-  //get user info by email:
-  requestOptions.url= 'https://api.github.com/search/users?q='+ email +'+in%3Aemail&type=Users';
-
-  request(requestOptions, function (err, response, data) {
-    if (err) {
-      throw err;
-    };
-
-    //handle error of nothing found?
-    // if (!data.items) {
-    //
-    //   res.send(false)
-    //   return false
-    // }
-    var user = JSON.parse(data);
-
-    repos_url = user.items[0].repos_url;
-
-    //get urls to all of users repos:
-    requestOptions.url= repos_url
-
-    request(requestOptions, function (err, response, data) {
-      if (err) {
-        throw err;
-      }
-      var allLanguages = []
-      //for each repo, push url to the repo's language object:
-      var urls = JSON.parse(data);
-      urls.forEach(function (repo) {
-        // console.log(repo.languages_url);
-        if (repo.languages_url) {
-          allLanguages.push(repo.languages_url);
-        }
-      });
-
-      //gather data for each language, reccursively
-      var languageCount = allLanguages.length;
-
-      function addLanguages(index) {
-        requestOptions.url= allLanguages[index];
-        request(requestOptions, function (err, response, data) {
-          if (err) {
-            throw err
-          };
-
-          var languageList = data
-
-          // check to make sure it is a JSON string, not undefined
-          if (typeof languageList=='string') {
-            languageList = JSON.parse(languageList);
-
-            //track characters for each language
-            for(var language in languageList){
-
-              if (LanguagesObject[language]) {
-
-                LanguagesObject[language]+= languageList[language];
-                // console.log(LanguagesObject);
-              }else{
-                LanguagesObject[language]=languageList[language]
-              }
-            }
-          };
-          if (index<languageCount-1) {
-            addLanguages(index+1)
-          };
-          if (index==languageCount-1) {
-            res.send(LanguagesObject)
-          }
-        })
-
-      } // end addLanguages
-
-       addLanguages(0);
-
-
-
-    }) // end get repos
-  }) // end get user
-};
-app.get('/getSkillsByEmail/:email', getShmails)
-
-app.get('/', function(req,res){
+app.get('/', function(req, res) {
   res.send('landing page')
 });
 
-app.get('/public', function(req,res){
-    res.sendFile(__dirname+'/public/index.html')
-})
-
-
-
-app.listen(3000, function(){
+app.listen(3000, function() {
   console.info('Listening on  port 3000...')
 })
