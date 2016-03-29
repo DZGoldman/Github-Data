@@ -5,7 +5,6 @@ var request = require('request');
 var pg = require('pg');
 var secrets = require('./secrets.js');
 var Sequelize = require ('sequelize');
-var cheerio = require ('cheerio')
 
 
 var requestOptions = {
