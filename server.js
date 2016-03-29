@@ -5,6 +5,12 @@ var request = require('request');
 var pg = require('pg');
 var secrets = require('./secrets.js');
 var Sequelize = require ('sequelize');
+var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
+  dialect: 'postgres'
+});
+var User = sequelize.import(__dirname + "/User");
+var sheetHelpers = require('./Helpers/sheet-helpers.js')
+var skillHelpers = require('./Helpers/skills-helpers.js')
 
 
 var requestOptions = {
@@ -25,43 +31,6 @@ pg.connect('postgres://localhost/githubdata-dev', (err) => {
       console.log('connection successfull');
    }
 });
-// var email = 'ckearns1210@gmail.com'
-//ray@raymasaki.com
-
-
-var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
-  dialect: 'postgres'
-});
-
-var User = sequelize.define('user', {
-  username: Sequelize.STRING,
-  email: {
-          type:Sequelize.STRING,
-          validate:{
-          isEmail: true
-          }
-        },
-  giturl: {
-          type:Sequelize.STRING,
-          validate:{
-          isUrl: true
-          }
-        },
-  location: Sequelize.STRING,
-  latitude: Sequelize.FLOAT,
-  longitude:Sequelize.FLOAT,
-  distance_from_lt: Sequelize.INTEGER,
-  sent_boolean: {
-                type:Sequelize.BOOLEAN,
-                defaultValue: false},
-  skills: Sequelize.ARRAY(Sequelize.TEXT),
-  skills_found:{
-                type:Sequelize.BOOLEAN,
-                defaultValue: false}
-
-});
-
-
 
 
 app.use(morgan('combined'));
@@ -70,6 +39,7 @@ app.use(  express.static(__dirname+'/public'));
 
 //GET RATE LIMIT
 function rateLimit(req, res) {
+  sequelize.sync().then(function () {
   User.count().then(function (c) {
       console.log(c);
     })
@@ -77,6 +47,7 @@ function rateLimit(req, res) {
     request(requestOptions,function (err, resp, body) {
       res.send(body)
     })
+  })
   }
 app.get('/ratelimit', rateLimit)
 
@@ -95,14 +66,7 @@ app.get('/sheet/:count', function (req, res) {
   var count = +req.params.count
   console.log(count);
   // retrieve JSON from google docs file (20000 at a time:)
-  var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json',
-  url2 = 'https://spreadsheets.google.com/feeds/list/1uwbaWOQl54RphdZVpHogQNxvnYuXq2_zjBOnr1lJDu4/od6/public/basic?alt=json',
-  url3 = 'https://spreadsheets.google.com/feeds/list/1tuSK3jDjmzhI0YHs2NAb-zAQTb2JJWc4kT3gcBXHA6o/od6/public/basic?alt=json',
-  url4 = 'https://spreadsheets.google.com/feeds/list/1DudUIDsoG_0_2zi-lTceBJC9NilTyea5pWwKFA7v8cA/od6/public/basic?alt=json',
-  url5 = 'https://spreadsheets.google.com/feeds/list/1Q5KZDWJkidgCy80jPhTbX2TSy83LE6MoY8s9W73VofE/od6/public/basic?alt=json',
-  url6 = 'https://spreadsheets.google.com/feeds/list/1dX6jz7TlvpD_JbHkgYQ_78AiZpowj5GVNiIKgO04zno/od6/public/basic?alt=json',
-  url7 = 'https://spreadsheets.google.com/feeds/list/1Pc75q7CNilhUt-gwfyssuKB6sG-Hkhh_zHgYX54rGtA/od6/public/basic?alt=json';
-  var urls = [url1,url2,url3,url4,url5,url6,url7]
+var urls = sheetHelpers.urls
   request(
     {url: urls[count],
      json: true
@@ -112,7 +76,7 @@ app.get('/sheet/:count', function (req, res) {
          throw error
        }
         // get array of all users (all rows in google docs)
-        var usersArray =  data.feed.entry;
+        var usersArray = data.feed.entry;
         var len =usersArray.length;
         console.log(len);
         var failCounter = 0;
@@ -121,36 +85,9 @@ app.get('/sheet/:count', function (req, res) {
           var infoArray = usersArray[index].content['$t'].split(', ');
 
           var user = User.build()
-          infoArray.forEach(function (dataPoint, index) {
-          switch (dataPoint.slice(0,3)) {
-            case 'ema':
-              user.email = infoArray[index].slice(7, infoArray[index].length).trim()
-              break;
-            case 'use':
-              user.username = infoArray[index].slice(9, infoArray[index].length).trim()
-              break;
-            case 'git':
-              user.giturl = infoArray[index].slice(8, infoArray[index].length).trim()
-              break;
-            case 'loc':
-              user.location = infoArray[index].slice(10, infoArray[index].length).trim()
-              break;
-            case 'lat':
-              user.latitude = infoArray[index].slice(10, infoArray[index].length)
-              break;
-            case 'lon':
-              user.longitude = infoArray[index].slice(11, infoArray[index].length)
-              break;
-            case 'dist':
-              user.distance_from_lt = infoArray[index].slice(16, infoArray[index].length)
-              break;
-            case 'sen':
-              user.sent_boolean = infoArray[index].slice(13, infoArray[index].length)
-              break;
-            default:
 
-          }
-        }) // end info loop
+          sheetHelpers.buildUser(infoArray,user)
+
         User.count().then(function (c) {
             if (index< len-1) {
 
@@ -342,8 +279,6 @@ function getSkills(email) {
       }
 
        addLanguages(0);
-
-
 
     }) // end get repos
   }) // end get user
