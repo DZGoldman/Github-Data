@@ -34,15 +34,6 @@ var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
   dialect: 'postgres'
 });
 
-// sequelize.authenticate().done(function(err) {
-  //     if (err) {
-  //       console.log('Unable to connect to the database:', err);
-  //     } else {
-  //       console.log('Connection has been established successfully.');
-  //     }
-  // });
-
-
 var User = sequelize.define('user', {
   username: Sequelize.STRING,
   email: {
@@ -150,7 +141,6 @@ app.get('/sheet/:count', function (req, res) {
   var url1 = 'https://spreadsheets.google.com/feeds/list/1-607M0KUFw3YlechaSVOUxCqX3Z44l5OPHQYqMr2mpw/od6/public/basic?alt=json',
   url2 = 'https://spreadsheets.google.com/feeds/list/1uwbaWOQl54RphdZVpHogQNxvnYuXq2_zjBOnr1lJDu4/od6/public/basic?alt=json',
   url3 = 'https://spreadsheets.google.com/feeds/list/1tuSK3jDjmzhI0YHs2NAb-zAQTb2JJWc4kT3gcBXHA6o/od6/public/basic?alt=json',
-  // 4 too big
   url4 = 'https://spreadsheets.google.com/feeds/list/1DudUIDsoG_0_2zi-lTceBJC9NilTyea5pWwKFA7v8cA/od6/public/basic?alt=json',
   url5 = 'https://spreadsheets.google.com/feeds/list/1Q5KZDWJkidgCy80jPhTbX2TSy83LE6MoY8s9W73VofE/od6/public/basic?alt=json',
   url6 = 'https://spreadsheets.google.com/feeds/list/1dX6jz7TlvpD_JbHkgYQ_78AiZpowj5GVNiIKgO04zno/od6/public/basic?alt=json',
@@ -377,8 +367,11 @@ app.get('/getSkillsByUrl', function (req, res) {
   var errorCounter=0;
   User.findAll({
     where:{skills_found:false},
-    limit: 500
+    limit: 4900
   }).then(function (users) {
+    if (reqCount==0){
+      reqCount++
+
     var len = users.length
     function getSkills(userIndex) {
       var user = users[userIndex];
@@ -414,7 +407,7 @@ app.get('/getSkillsByUrl', function (req, res) {
          user.update({
            skills:skills,
            skills_found: true
-         }).then(function (um) {
+         }).then(function () {
            console.log('user updated', userIndex);
 
            if (userIndex<len-1) {
@@ -435,6 +428,7 @@ app.get('/getSkillsByUrl', function (req, res) {
 
 
       getSkills(0)
+    }
     })
   })
 })
