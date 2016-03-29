@@ -100,10 +100,10 @@ app.get('/sheet/:count', function(req, res) {
 
 // GET 5000 USER'S SKILLS
 app.get('/getSkillsByUrl', function(req, res) {
-  var limit = 5000;
+  var limit = 4900;
   requestOptions.url = 'https://api.github.com/rate_limit'
   request(requestOptions, function(err, resp, body) {
-      if (JSON.parse(body).resources.core.remaining < limit) {
+      if (JSON.parse(body).resources.core.remaining <= limit) {
         console.log('api limit is too low');
         res.send(body)
       } else {
@@ -120,25 +120,8 @@ app.get('/getSkillsByUrl', function(req, res) {
               requestOptions.url = url;
               //get repos
               request(requestOptions, function(error, response, data) {
-                  if (error) {
-                    throw error
-                  };
-                  var status = response.statusCode;
-                  if (status >= 200 && status <= 299) {
-                    var repos = JSON.parse(data);
-                    var skills = skillHelpers.getLanguages(repos);
-                    user.update({skills: skills, skills_found: true})
-                      .then(function() {
-                        console.log('user updated', userIndex);
-                        skillHelpers.recurIfNotDone(userIndex, len, getSkills)
-                      })
-                  } else {
-                    errorCounter++
-                    user.update({
-                        skills_found: true
-                      })
-                    skillHelpers.recurIfNotDone(userIndex, len, getSkills)
-                  }
+                skillHelpers.getUsersSkills(error,response,data,
+                  user,userIndex,len,getSkills,errorCounter)
                 }) // end request
             } // end getSkills
             getSkills(0)

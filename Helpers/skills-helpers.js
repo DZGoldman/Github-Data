@@ -1,4 +1,26 @@
-module.exports = {
+
+var skillHelpersHash ={
+  getUsersSkills: function(error, response, data, user, userIndex, len,getSkills, errorCounter) {
+      if (error) {
+        throw error
+      };
+      var status = response.statusCode;
+      if (status >= 200 && status <= 299) {
+        var repos = JSON.parse(data);
+        var skills = skillHelpersHash.getLanguages(repos);
+        user.update({skills: skills, skills_found: true})
+          .then(function() {
+            console.log('user updated', userIndex);
+            skillHelpersHash.recurIfNotDone(userIndex, len, getSkills)
+          })
+      } else {
+        errorCounter++
+        user.update({
+            skills_found: true
+          })
+        skillHelpersHash.recurIfNotDone(userIndex, len, getSkills)
+      }
+    },
   //Takes in API response object of a user's repo, outputs an array of the user's languages
   getLanguages: function (repos) {
    var skills = [];
@@ -23,3 +45,5 @@ module.exports = {
    }
  }
 }
+
+module.exports =skillHelpersHash;
