@@ -35,7 +35,7 @@ pg.connect('postgres://localhost/githubdata-dev', (err) => {
 app.use(morgan('combined'));
 
 //GET RATE LIMIT
-function rateLimit(req, res) {
+app.get('/ratelimit', function (req, res) {
   sequelize.sync().then(function() {
     User.count().then(function(c) {
       console.log(c);
@@ -46,8 +46,8 @@ function rateLimit(req, res) {
       res.send(body)
     })
   })
-};
-app.get('/ratelimit', rateLimit)
+});
+
 // GET GOOGLE SHEET
 reqCount = 0;
 app.get('/sheet/:count', function(req, res) {
@@ -59,10 +59,7 @@ app.get('/sheet/:count', function(req, res) {
     var count = +req.params.count
       // retrieve JSON from google docs file (20000 at a time:)
     var urls = sheetHelpers.urls
-    request({
-        url: urls[count],
-        json: true
-      },
+    request({url: urls[count],json: true},
       function(error, response, data) {
         if (error) {
           throw error
@@ -103,9 +100,7 @@ app.get('/sheet/:count', function(req, res) {
 
 // GET 5000 USER'S SKILLS
 app.get('/getSkillsByUrl', function(req, res) {
-
   var limit = 5000;
-
   requestOptions.url = 'https://api.github.com/rate_limit'
   request(requestOptions, function(err, resp, body) {
       if (JSON.parse(body).resources.core.remaining < limit) {
@@ -113,15 +108,10 @@ app.get('/getSkillsByUrl', function(req, res) {
         res.send(body)
       } else {
         console.log("getting", limit, "users skills");
-        console.log('START');
         sequelize.sync().then(function() {
           var errorCounter = 0;
-          User.findAll({
-            where: {
-              skills_found: false
-            },
-            limit: limit
-          }).then(function(users) {
+          User.findAll({where: {skills_found: false },limit: limit})
+            .then(function(users) {
             var len = users.length;
             function getSkills(userIndex) {
               var user = users[userIndex];
@@ -147,24 +137,17 @@ app.get('/getSkillsByUrl', function(req, res) {
                     user.update({
                         skills_found: true
                       })
-                      // console.log('nope...', errorCounter);
                     skillHelpers.recurIfNotDone(userIndex, len, getSkills)
                   }
                 }) // end request
             } // end getSkills
             getSkills(0)
           })
-        })
-      }
+        }) //end sequelize sync
+      } //end else (after limit check)
     }) //end request limit
 })
 
-
-app.get('/test', function(req, res) {
-  rateLimit(req, res)
-
-
-})
 
 
 app.get('/', function(req, res) {
