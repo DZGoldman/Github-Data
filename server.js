@@ -5,7 +5,7 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata-prod', {
+  sequelize = new Sequelize('postgres://localhost/githubdata-test', {
     dialect: 'postgres'
   }),
   User = sequelize.import(__dirname + "/User"),
