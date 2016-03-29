@@ -5,7 +5,7 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
+  sequelize = new Sequelize('postgres://localhost/githubdata-prod', {
     dialect: 'postgres'
   }),
   User = sequelize.import(__dirname + "/User"),
@@ -65,13 +65,11 @@ app.get('/sheet/:count', function(req, res) {
           throw error
         }
         // get array of all users (all rows in google docs)
-        var usersArray = data.feed.entry;
-        var len = usersArray.length;
-        var failCounter = 0;
+        var usersArray = data.feed.entry, len = usersArray.length, failCounter = 0;
         // recursive: for each row, create new User, give appropriate attributes (need case statement b/c JSON.parse isn't working!) and then save into DB. Upon successful save, move on to next row.
         function saveUser(index) {
           var infoArray = usersArray[index].content['$t'].split(', ');
-          var user = User.build()
+          var user = User.build();
           sheetHelpers.buildUser(infoArray, user)
           User.count().then(function(c) {
             if (index < len - 1) {
@@ -92,7 +90,6 @@ app.get('/sheet/:count', function(req, res) {
           })
         } //end save user
         sequelize.sync().then(saveUser(0))
-        console.log('done and done');
       }); // end of request
   } //end if
 
