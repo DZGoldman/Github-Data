@@ -1,16 +1,16 @@
-var express  = require('express');
-var app      = express();
-var morgan   = require ('morgan');
-var request = require('request');
-var pg = require('pg');
-var secrets = require('./secrets.js');
-var Sequelize = require ('sequelize');
-var sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
+var express  = require('express'),
+ app      = express(),
+ morgan   = require ('morgan'),
+ request = require('request'),
+ pg = require('pg'),
+ secrets = require('./secrets.js'),
+ Sequelize = require ('sequelize'),
+ sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
   dialect: 'postgres'
-});
-var User = sequelize.import(__dirname + "/User");
-var sheetHelpers = require('./Helpers/sheet-helpers.js')
-var skillHelpers = require('./Helpers/skills-helpers.js')
+  }),
+ User = sequelize.import(__dirname + "/User"),
+ sheetHelpers = require('./Helpers/sheet-helpers.js'),
+ skillHelpers = require('./Helpers/skills-helpers.js')
 
 
 var requestOptions = {
@@ -60,9 +60,9 @@ app.get('/sheet/:count', function (req, res) {
   if (reqCount==0) {
     reqCount++
     console.log('START');
-  sequelize.sync().then(function () {
-    console.log('tables synced up');
-  })
+    sequelize.sync().then(function () {
+      console.log('tables synced up');
+    })
   var count = +req.params.count
   console.log(count);
   // retrieve JSON from google docs file (20000 at a time:)
@@ -83,31 +83,24 @@ var urls = sheetHelpers.urls
         // recursive: for each row, create new User, give appropriate attributes (need case statement b/c JSON.parse isn't working!) and then save into DB. Upon successful save, move on to next row.
         function saveUser(index) {
           var infoArray = usersArray[index].content['$t'].split(', ');
-
           var user = User.build()
-
           sheetHelpers.buildUser(infoArray,user)
-
-        User.count().then(function (c) {
-            if (index< len-1) {
-
-        user.save()
-          .then(function () {
-            return saveUser(index+1)
-        })
-
-        .catch(function(error) {
-          console.log('Failyed!',error);
-
-          failCounter++
-          if (index<len-1) {
-            return saveUser(index+1)
-          };
-        })
-      }else{
-        console.log('youre done tho!');
-        console.log('# of times you failed:', failCounter);
-      }
+          User.count().then(function (c) {
+              if (index< len-1) {
+          user.save()
+            .then(function () {
+              return saveUser(index+1)
+          })
+          .catch(function(error) {
+            console.log('Failyed!',error);
+            failCounter++
+            if (index<len-1) {
+              return saveUser(index+1)
+            };
+          })
+        }else{
+          console.log('# of times you failed:', failCounter);
+        }
     }
   )}//end save user
   sequelize.sync().then(saveUser(0))
@@ -121,6 +114,8 @@ var urls = sheetHelpers.urls
 
 // GET 5000 USER'S SKILLS
 app.get('/getSkillsByUrl', function (req, res) {
+  if (reqCount==0){
+      reqCount++
   console.log('START');
   sequelize.sync().then(function () {
 
@@ -129,8 +124,8 @@ app.get('/getSkillsByUrl', function (req, res) {
     where:{skills_found:false},
     limit: 4900
   }).then(function (users) {
-    if (reqCount==0){
-      reqCount++
+
+
     var len = users.length
     function getSkills(userIndex) {
       var user = users[userIndex];
@@ -143,26 +138,15 @@ app.get('/getSkillsByUrl', function (req, res) {
         if (error) {
           throw error
         };
+        var status=response.statusCode;
+        console.log(status);
+
+      if (status>=200 && status <=299 ) {
        var repos= JSON.parse(data);
-       var languagesHash ={};
-       var status=response.statusCode;
-       console.log(status);
-       if (status>=200 && status <=299 ) {
-        repos.forEach(function (repo) {
-          var language = repo.language;
-          if (language && !languagesHash[language] ) {
-            languagesHash[language]=true
-          }
-        }) //end for each repo
-        var skills = [];
-        for (language in languagesHash){
-          skills.push(language)
-        }
+       var skills = skillHelpers.getLanguages(repos);
          console.log(skills)
-         user.update({
-           skills:skills,
-           skills_found: true
-         }).then(function () {
+         user.update({skills:skills, skills_found: true})
+            .then(function () {
            console.log('user updated', userIndex);
            if (userIndex<len-1) {
              getSkills(userIndex+1)
@@ -176,14 +160,12 @@ app.get('/getSkillsByUrl', function (req, res) {
       }) // end request
     } // end getSkills
 
-
       getSkills(0)
-    }
+
     })
   })
+}
 })
-
-
 
 
 
