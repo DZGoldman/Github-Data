@@ -5,7 +5,7 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata-test', {
+  sequelize = new Sequelize('postgres://localhost/githubdata1', {
     dialect: 'postgres'
   }),
   User = sequelize.import(__dirname + "/User"),
@@ -23,7 +23,7 @@ var requestOptions = {
     password: secrets.password
   }
 }
-
+app.use(  express.static(__dirname+'/public'));
 pg.connect('postgres://localhost/githubdata-dev', (err) => {
   if (err) {
     console.log(err);
@@ -96,13 +96,13 @@ app.get('/sheet/:count', function(req, res) {
 })
 
 // GET 5000 USER'S SKILLS
-app.get('/getSkillsByUrl', function(req, res) {
-  var limit = 4900;
+function getSkillsByUrl(req, res) {
+  var limit = 5000;
   requestOptions.url = 'https://api.github.com/rate_limit'
   request(requestOptions, function(err, resp, body) {
-      if (JSON.parse(body).resources.core.remaining <= limit) {
+      if (JSON.parse(body).resources.core.remaining < limit) {
         console.log('api limit is too low');
-        res.send(body)
+        // res.send(body)
       } else {
         console.log("getting", limit, "users skills");
         sequelize.sync().then(function() {
@@ -126,12 +126,25 @@ app.get('/getSkillsByUrl', function(req, res) {
         }) //end sequelize sync
       } //end else (after limit check)
     }) //end request limit
-})
+}
+app.get('/getSkillsByUrl', getSkillsByUrl)
 
 
 
 app.get('/', function(req, res) {
   res.send('landing page')
+});
+
+app.get('/scrapecron', function(req, res) {
+var time =1000*60*62
+  getSkillsByUrl()
+  console.log('^first');
+  setInterval(function () {
+  console.log('scrape');
+  getSkillsByUrl()
+
+}, time)
+
 });
 
 app.listen(3000, function() {
