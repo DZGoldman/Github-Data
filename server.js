@@ -10,7 +10,11 @@ var express = require('express'),
   }),
   User = sequelize.import(__dirname + "/User"),
   sheetHelpers = require('./Helpers/sheet-helpers.js'),
-  skillHelpers = require('./Helpers/skills-helpers.js')
+  skillHelpers = require('./Helpers/skills-helpers.js'),
+  CronJob = require('cron').CronJob;
+
+
+
 
 var requestOptions = {
   url: '', //URL to hit
@@ -135,13 +139,22 @@ app.get('/', function(req, res) {
   res.send('landing page')
 });
 
-app.get('/scrapecron', function(req, res) {
+
+app.get('/nodecron', function (req, res) {
+    new CronJob('0 0 0/1 1/1 * * *', function() {
+      console.log('You will see this message every second');
+    }, null, true, 'America/New_York');
+})
+app.get('/intervalcron', function(req, res) {
+  skillHelpers.logTime()
+
 var time =1000*60*62
   getSkillsByUrl()
   console.log('^first');
   setInterval(function () {
-  console.log('scrape');
-  getSkillsByUrl()
+    console.log('scrape');
+    skillHelpers.logTime()
+    getSkillsByUrl()
 
 }, time)
 
@@ -150,3 +163,25 @@ var time =1000*60*62
 app.listen(3000, function() {
   console.info('Listening on  port 3000...')
 })
+
+skillHelpers.logTime()
+
+app.get('/test', function (req, res  ) {
+  requestOptions.url = 'https://api.github.com/user/emails'
+  request(requestOptions, function (err, resp, data) {
+    console.log(err);
+    console.log(resp);
+    console.log(data);
+    res.send(resp)
+  })
+})
+
+var time =1000*60*62
+getSkillsByUrl()
+console.log('^first');
+setInterval(function () {
+  console.log('scrape');
+  skillHelpers.logTime()
+  getSkillsByUrl()
+
+}, time)

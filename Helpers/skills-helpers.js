@@ -43,7 +43,12 @@ var skillHelpersHash ={
    }else{
      console.log('done with scrape');
    }
+ },
+ logTime: function () {
+   var t = new Date()
+   console.log(t.getHours(),t.getMinutes(),t.getSeconds())
  }
+
 }
 
 module.exports =skillHelpersHash;
