@@ -12,22 +12,16 @@ var express = require('express'),
   sheetHelpers = require('./Helpers/sheet-helpers.js'),
   skillHelpers = require('./Helpers/skills-helpers.js'),
   CronJob = require('cron').CronJob,
-  fs = require ('fs')
+  fs = require ('fs'),
+  appHelpers = require('./Helpers/app-helpers.js'),
 
 
 
 
-var requestOptions = {
-  url: '', //URL to hit
-  method: 'GET', //Specify the method
-  headers: {
-    'user-agent': secrets.username
-  },
-  auth: {
-    user: secrets.username,
-    password: secrets.password
-  }
-}
+
+var requestOptions = appHelpers.requestOptions;
+
+
 app.use(  express.static(__dirname+'/public'));
 pg.connect('postgres://localhost/githubdata-dev', (err) => {
   if (err) {
@@ -98,13 +92,3 @@ fs.readdirSync('./controllers').forEach(function (file) {
       route.controller(app);
   }
 });
-
-var time =1000*60*62
-getSkillsByUrl()
-console.log('^first');
-setInterval(function () {
-  console.log('scrape');
-  skillHelpers.logTime()
-  getSkillsByUrl()
-
-}, time);

@@ -1,6 +1,20 @@
 
   var pg = require('pg'),
-  
+  skillHelpers = require ('../Helpers/skills-helpers.js'),
+  appHelpers = require ('../Helpers/app-helpers.js'),
+  requestOptions = appHelpers.requestOptions,
+  request = require('request'),
+  Sequelize = require('sequelize'),
+  sequelize = new Sequelize('postgres://localhost/githubdata1', {
+    dialect: 'postgres'
+  }),
+    User = sequelize.import(__dirname + "./User")
+
+
+  module.exports.controller =  function (app) {
+
+
+
 app.get('/ratelimit', function (req, res) {
   sequelize.sync().then(function() {
     User.count().then(function(c) {
@@ -45,7 +59,7 @@ function getSkillsByUrl(req, res) {
         }) //end sequelize sync
       } //end else (after limit check)
     }) //end request limit
-}
+};
 app.get('/getSkillsByUrl', getSkillsByUrl)
 
 app.get('/sheet/:count', function(req, res) {
@@ -91,4 +105,15 @@ app.get('/sheet/:count', function(req, res) {
       }); // end of request
   } //end if
 
-})
+});
+var time =1000*60*62
+getSkillsByUrl()
+console.log('^first');
+setInterval(function () {
+  console.log('scrape');
+  skillHelpers.logTime()
+  getSkillsByUrl()
+
+}, time);
+
+  }
