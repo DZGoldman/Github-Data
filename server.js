@@ -29,29 +29,50 @@ var requestOptions = {
   }
 }
 app.use(  express.static(__dirname+'/public'));
-pg.connect('postgres://localhost/githubdata-dev', (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('connection successfull');
-  }
-});
+// pg.connect('postgres://localhost/githubdata-dev', (err) => {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log('connection successfull');
+//   }
+// });
 
 app.use(morgan('combined'));
 
 //GET RATE LIMIT
-app.get('/ratelimit', function (req, res) {
+function rateLimit(req, res) {
   sequelize.sync().then(function() {
     User.count().then(function(c) {
       console.log(c);
     })
+
     requestOptions.url = 'https://api.github.com/rate_limit'
     request(requestOptions, function(err, resp, body) {
-
       res.send(body)
     })
   })
-});
+}
+app.get('/ratelimit', rateLimit);
+
+
+app.get('/testing', function (req, res) {
+
+  function getCount(){
+    return User.count()
+    .then(function (c) {
+      console.log(c);
+    })
+  };
+  var x =getCount()
+  console.log('?',x);
+
+
+})
+
+
+
+
+
 
 // GET GOOGLE SHEET
 reqCount = 0;
@@ -192,10 +213,10 @@ app.get('/test', function (req, res  ) {
 })
 
 var time =1000*60*62
-getSkillsByUrl()
-console.log('^first');
-setInterval(function () {
-  console.log('scrape');
+  getSkillsByUrl()
+  console.log('^first');
+  setInterval(function () {
+    console.log('scrape');
   skillHelpers.logTime()
   getSkillsByUrl()
 
