@@ -5,7 +5,7 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata1', {
+  sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
     dialect: 'postgres'
   }),
   User = sequelize.import(__dirname + "/User"),
@@ -133,6 +133,20 @@ function getSkillsByUrl(req, res) {
 }
 app.get('/getSkillsByUrl', getSkillsByUrl)
 
+app.get('/getdistancefromlt', function (req,res) {
+  sequelize.sync().then(function () {
+    User.findAll().then(function (users) {
+      users.forEach(function (user) {
+      var lat = user.latitude, lon = user.longitude;
+      if (lat && lon) {
+        var distance_from_lt = skillHelpers.distanceFromLt(user.latitude, user.longitude)
+        user.update({distance_from_lt: distance_from_lt})
+      }
+      })
+    })
+  })
+
+})
 
 
 app.get('/', function(req, res) {
