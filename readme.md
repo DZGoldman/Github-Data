@@ -1,17 +1,9 @@
 ToDo:
 
 
-- fix sheet important so it doesn't double up
-- set up route that,
-for 5000 records where skills aren't found
-take in url,
-strips for username,
-gets all users repos,
-gets all languages,
-sorts them,
-updates user for skills and "skills found"
+- get location from lat and long...
 - restructure
-- hourly chron job
+
 
 
 
@@ -21,7 +13,16 @@ Done:
 - DONE Set up authenticaion
 - DONE Configure pg database
 - put on github in private repo
-
+- fix sheet important so it doesn't double up
+- set up route that,
+for 5000 records where skills aren't found
+take in url,
+strips for username,
+gets all users repos,
+gets all languages,
+sorts them,
+updates user for skills and "skills found"
+- hourly chron job
 
  - configure sequalize?
 

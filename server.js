@@ -5,7 +5,7 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
+  sequelize = new Sequelize('postgres://localhost/githubdata1', {
     dialect: 'postgres'
   }),
   User = sequelize.import(__dirname + "/User"),
@@ -14,7 +14,8 @@ var express = require('express'),
   CronJob = require('cron').CronJob;
 
 
-
+// find all users that have certain skills, query:
+//select Count(*) from users where skills @> '{JavaScript, Ruby}'::text[];
 
 var requestOptions = {
   url: '', //URL to hit

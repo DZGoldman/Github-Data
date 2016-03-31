@@ -25,6 +25,10 @@
 
 
 ### Other info Gathered for Approval
-- Number of repos
+- Store git hub skills (to compare with user's claimed skills)
+- timeline on github (from first commit to most recent, frequency?)
+- Number of github repos
 
-2 Components: autofilling for user's ease, and verifying user's claims. Say their claims are contradicted by github - what then?
+### additional considerations
+- 2 Components: autofilling for user's ease, and verifying user's claims. Say their claims are contradicted by github - what then?
+- Finding github by email has much lower api limit (30 per day? Check Lt's methods)
