@@ -1,5 +1,37 @@
+var apiCalls = require('./api-calls.js')
 
-var skillHelpersHash ={
+var skillHelpersHash = {
+
+   getAllLanguageBytes: function(repoArray, languageHash, res, index) {
+     var that= this;
+    var url = repoArray[index].languages_url;
+    apiCalls.getLanguagesBytes(url)
+    .then(function (data) {
+      languageHash = that.addLanguageBytes(languageHash,data)
+      if (index<repoArray.length-1) {
+        that.getAllLanguageBytes(repoArray,languageHash, res, index+1)
+      } else{
+        res.send(languageHash)
+      }
+    })
+  },
+
+  addLanguageBytes: function(languageHash, data) {
+    var languageBytes = JSON.parse(data);
+    //track characters for each language
+    for (var language in languageBytes) {
+      if (languageHash[language]) {
+        languageHash[language] += languageBytes[language];
+        // console.log(languageHash);
+      } else {
+        languageHash[language] = languageBytes[language]
+      }
+    }
+    return languageHash
+  },
+
+  //messy from here on down:
+
   getUsersSkills: function(error, response, data, user, userIndex, len,getSkills, errorCounter) {
       if (error) {
         throw error

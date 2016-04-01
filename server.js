@@ -53,6 +53,11 @@ function rateLimit(req, res) {
     })
   })
 }
+
+app.get('/', function(req, res) {
+  res.send('landing page')
+});
+
 app.get('/ratelimit', rateLimit);
 
 
@@ -75,9 +80,6 @@ app.get('/testing', function (req, res) {
 
 
 
-app.get('/', function(req, res) {
-  res.send('landing page')
-});
 
 
 app.listen(3000, function() {
