@@ -6,8 +6,9 @@ var express = require('express'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
   sequelize = new Sequelize('postgres://localhost/githubdata1', {
-    dialect: 'postgres'
-  }),
+    dialect: 'postgres',
+    port: 5432
+   }),
   User = sequelize.import(__dirname + "/User"),
   sheetHelpers = require('./Helpers/sheet-helpers.js'),
   skillHelpers = require('./Helpers/skills-helpers.js'),
