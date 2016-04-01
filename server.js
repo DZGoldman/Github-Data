@@ -5,7 +5,7 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata1', {
+  sequelize = new Sequelize('postgres://localhost/githubdata2', {
     dialect: 'postgres',
     port: 5432
    }),
@@ -157,18 +157,40 @@ function getSkillsByUrl(req, res) {
 app.get('/getSkillsByUrl', getSkillsByUrl)
 
 app.get('/getdistancefromlt', function (req,res) {
+  if (reqCount==0) {
+
+
   sequelize.sync().then(function () {
-    User.findAll().then(function (users) {
-      users.forEach(function (user) {
+    User.findAll({where: {distance_from_lt: null }, limit:10000 }).then(function (users) {
+      console.log(users.length);
+    function saveAllDistaneces(users, index) {
+      console.log('yo?');
+      var user = users[index];
+
       var lat = user.latitude, lon = user.longitude;
       if (lat && lon) {
         var distance_from_lt = skillHelpers.distanceFromLt(user.latitude, user.longitude)
-        user.update({distance_from_lt: distance_from_lt})
+        user.update({distance_from_lt: distance_from_lt}).then(function () {
+          if (index<users.length-1) {
+            console.log(index);
+          saveAllDistaneces(users, index+1)
+        }
+        })
+      }else{
+        if (index<users.length-1) {
+          saveAllDistaneces(users, index+1)
+        }
       }
-      })
+    };
+
+    saveAllDistaneces(users, 0)
+    console.log('done');
     })
   })
-
+}else{
+  reqCount++
+  console.log('NO',reqCount);
+}
 })
 
 
@@ -201,7 +223,6 @@ app.listen(3000, function() {
   console.info('Listening on  port 3000...')
 })
 
-skillHelpers.logTime()
 
 app.get('/test', function (req, res  ) {
   requestOptions.url = 'https://api.github.com/user/emails'
@@ -212,13 +233,14 @@ app.get('/test', function (req, res  ) {
     res.send(resp)
   })
 })
-
-var time =1000*60*62
-  getSkillsByUrl()
-  console.log('^first');
-  setInterval(function () {
-    console.log('scrape');
-  skillHelpers.logTime()
-  getSkillsByUrl()
-
-}, time)
+//
+// skillHelpers.logTime()
+// var time =1000*60*62
+//   getSkillsByUrl()
+//   console.log('^first');
+//   setInterval(function () {
+//     console.log('scrape');
+//   skillHelpers.logTime()
+//   getSkillsByUrl()
+//
+// }, time)
