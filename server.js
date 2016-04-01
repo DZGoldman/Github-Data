@@ -19,8 +19,14 @@ var express = require('express'),
 
 
 
-var requestOptions = appHelpers.requestOptions;
-
+requestOptions = appHelpers.requestOptions;
+sequelize.sync()
+  .then(function () {
+    console.log('tables synced');
+  })
+  .catch(function () {
+      console.log('failure to sync');
+  })
 
 app.use(  express.static(__dirname+'/public'));
 pg.connect('postgres://localhost/githubdata-dev', (err) => {
@@ -54,20 +60,20 @@ app.get('/nodecron', function (req, res) {
       console.log('You will see this message every second');
     }, null, true, 'America/New_York');
 })
-app.get('/intervalcron', function(req, res) {
-  skillHelpers.logTime()
-
-var time =1000*60*62
-  getSkillsByUrl()
-  console.log('^first');
-  setInterval(function () {
-    console.log('scrape');
-    skillHelpers.logTime()
-    getSkillsByUrl()
-
-}, time)
-
-});
+// app.get('/intervalcron', function(req, res) {
+//   skillHelpers.logTime()
+//
+// var time =1000*60*62
+//   getSkillsByUrl()
+//   console.log('^first');
+//   setInterval(function () {
+//     console.log('scrape');
+//     skillHelpers.logTime()
+//     getSkillsByUrl()
+//
+// }, time)
+//
+// });
 
 app.listen(3000, function() {
   console.info('Listening on  port 3000...')
@@ -86,9 +92,9 @@ app.get('/test', function (req, res  ) {
 })
 
 
-fs.readdirSync('./controllers').forEach(function (file) {
+fs.readdirSync('./routes').forEach(function (file) {
   if(file.substr(-3) == '.js') {
-      route = require('./controllers/' + file);
-      route.controller(app);
+      route = require('./routes/' + file);
+      route.controller(app, User);
   }
 });

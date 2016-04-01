@@ -1,22 +1,21 @@
 
-  var pg = require('pg'),
-  skillHelpers = require ('../Helpers/skills-helpers.js'),
+
+var  skillHelpers = require ('../Helpers/skills-helpers.js'),
   appHelpers = require ('../Helpers/app-helpers.js'),
   requestOptions = appHelpers.requestOptions,
-  request = require('request'),
-  Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata1', {
-    dialect: 'postgres'
-  }),
-    User = sequelize.import(__dirname + "./User")
+  request = require('request');
+  // Sequelize = require('sequelize'),
+  // sequelize = new Sequelize('postgres://localhost/githubdata1', {
+  //   dialect: 'postgres'
+  // });
 
 
-  module.exports.controller =  function (app) {
+  module.exports.controller =  function (app, User) {
 
 
 
 app.get('/ratelimit', function (req, res) {
-  sequelize.sync().then(function() {
+
     User.count().then(function(c) {
       console.log(c);
     })
@@ -25,7 +24,7 @@ app.get('/ratelimit', function (req, res) {
 
       res.send(body)
     })
-  })
+
 });
 
 reqCount = 0;
@@ -106,14 +105,14 @@ app.get('/sheet/:count', function(req, res) {
   } //end if
 
 });
-var time =1000*60*62
-getSkillsByUrl()
-console.log('^first');
-setInterval(function () {
-  console.log('scrape');
-  skillHelpers.logTime()
-  getSkillsByUrl()
-
-}, time);
+// var time =1000*60*62
+// getSkillsByUrl()
+// console.log('^first');
+// setInterval(function () {
+//   console.log('scrape');
+//   skillHelpers.logTime()
+//   getSkillsByUrl()
+//
+// }, time);
 
   }
