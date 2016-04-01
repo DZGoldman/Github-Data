@@ -22,7 +22,7 @@ module.exports.controller =  function (app, User) {
       var repos = JSON.parse(data);
       var languages = skillsHelpers.getLanguages(repos)
       res.send(languages)
-    }
+    };
 
     apiCalls.getReposByGitName(userName)
       .then(getLangList)
@@ -64,6 +64,13 @@ module.exports.controller =  function (app, User) {
   });
 
 
+app.get('/api/skillsbasic/email/:email', function (req, res) {
+
+};
+
+app.get('/api/skillscomplex/email/:email', function (req, res) {
+
+};
 
 
 

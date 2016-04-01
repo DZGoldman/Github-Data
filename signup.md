@@ -21,14 +21,14 @@
     - Scrape from resume
   - Location
     - Scrape from resume/github
-  - Type of work, hourly rate
 
 
-### Other info Gathered for Approval
-- Store git hub skills (to compare with user's claimed skills)
-- timeline on github (from first commit to most recent, frequency?)
+### Other info Gathered/Saved for Approval Process
+-  Git hub skills (to compare with user's claimed skills)
+- Timeline on github (from first commit to most recent, commit frequency?)
 - Number of github repos
-
-### additional considerations
-- 2 Components: autofilling for user's ease, and verifying user's claims. Say their claims are contradicted by github - what then?
-- Finding github by email has much lower api limit (30 per day? Check Lt's methods)
+- Github ranking
+- If user rejects predicted github handle, can add cross-reference verification between email address and github profile
+### Additional Considerations
+- Say their claims are contradicted by github - what then? Send them some additional questions
+- Finding github info by email requires search feature, and this much lower API limit.
