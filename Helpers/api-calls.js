@@ -1,6 +1,12 @@
 var requestOptions = require('./app-helpers').requestOptions,
   rp = require('request-promise');
 module.exports = {
+  rateLimit: function (req, res) {
+      requestOptions.url = 'https://api.github.com/rate_limit'
+      request(requestOptions, function(err, resp, body) {
+        res.send(body)
+      })
+  },
   getReposByGitName: function(username) {
     requestOptions.url = 'https://api.github.com/users/' + username + '/repos';
     return rp(requestOptions)
