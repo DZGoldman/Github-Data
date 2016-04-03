@@ -17,10 +17,6 @@ module.exports = {
     return rp(requestOptions)
   },
 
-  getSkillsComplex: function(userdata) {
-
-  },
-
   getLanguagesBytes: function(languages_url) {
     requestOptions.url = languages_url
     return rp(requestOptions)

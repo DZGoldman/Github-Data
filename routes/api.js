@@ -18,8 +18,8 @@ module.exports.controller =  function (app, User) {
 
   app.get('/api/skillsbasic/username/:username', function (req,res) {
     var userName = req.params.username.trim();
-    function getLangList (data) {
-      var repos = JSON.parse(data);
+    function getLangList (repoData) {
+      var repos = JSON.parse(repoData);
       var languages = skillsHelpers.getLanguages(repos)
       res.send(languages)
     };
@@ -43,16 +43,11 @@ module.exports.controller =  function (app, User) {
       })
   })
 
-
   app.get('/api/repos/email/:email', function (req, res) {
     var email = req.params.email.trim();
-    function getRepos(data) {
-      var result = JSON.parse(data)
-      var handle = result.items[0].login
-      return apiCalls.getReposByGitName(handle)
-    }
+
     apiCalls.getUserByEmail(email)
-      .then(getRepos)
+      .then(skillsHelpers.getRepos)
       .then(function (data) {
           res.send(data)
         })
@@ -60,20 +55,40 @@ module.exports.controller =  function (app, User) {
     .catch(function (data) {
         res.send(data)
       });
-    //get Reops (hoist)
   });
 
-
 app.get('/api/skillsbasic/email/:email', function (req, res) {
+  var email = req.params.email.trim();
 
-};
+  apiCalls.getUserByEmail(email)
+    .then(skillsHelpers.getRepos)
+    .then( function (repoData) {
+      var repos = JSON.parse(repoData);
+      var languages = skillsHelpers.getLanguages(repos)
+      res.send(languages)
+    })
+  //catch error
+  .catch(function (data) {
+      res.send(data)
+    });
+
+});
 
 app.get('/api/skillscomplex/email/:email', function (req, res) {
+  var email = req.params.email.trim();
 
-};
-
-
-
+  apiCalls.getUserByEmail(email)
+    .then(skillsHelpers.getRepos)
+    .then( function (data) {
+        var repoArray = JSON.parse(data)
+        var languageHash = {};
+        skillsHelpers.getAllLanguageBytes(repoArray,languageHash, res, 0)
+      })
+  //catch error
+  .catch(function (data) {
+      res.send(data)
+    });
+});
 
 
 } // end module

@@ -2,6 +2,11 @@ var apiCalls = require('./api-calls.js')
 
 var skillHelpersHash = {
 
+  getRepos: function (userData) {
+    var result = JSON.parse(userData)
+    var handle = result.items[0].login
+    return apiCalls.getReposByGitName(handle)
+  },
    getAllLanguageBytes: function(repoArray, languageHash, res, index) {
      var that= this;
     var url = repoArray[index].languages_url;
