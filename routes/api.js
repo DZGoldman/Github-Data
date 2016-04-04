@@ -3,8 +3,7 @@ var skillsHelpers = require('../Helpers/skills-helpers.js')
 
 module.exports.controller =  function (app, User) {
 
-
-  app.get('/api/repos/username/:username',function (req,res) {
+  app.get('/api/getReposByUsername/:username',function (req,res) {
     var userName = req.params.username.trim();
     apiCalls.getReposByGitName(userName)
     .then(function (data) {
@@ -15,8 +14,7 @@ module.exports.controller =  function (app, User) {
       })
   });
 
-
-  app.get('/api/skillsbasic/username/:username', function (req,res) {
+  app.get('/api/getSkillsListByUsername/:username', function (req,res) {
     var userName = req.params.username.trim();
     function getLangList (repoData) {
       var repos = JSON.parse(repoData);
@@ -33,7 +31,7 @@ module.exports.controller =  function (app, User) {
     })
   });
 
-  app.get('/api/skillscomplex/username/:username', function (req,res) {
+  app.get('/api/getSkillsHashByUsername/:username', function (req,res) {
     var userName = req.params.username.trim();
     apiCalls.getReposByGitName(userName)
     .then(function (data) {
@@ -43,7 +41,7 @@ module.exports.controller =  function (app, User) {
       })
   })
 
-  app.get('/api/repos/email/:email', function (req, res) {
+  app.get('/api/getReposByEmail/:email', function (req, res) {
     var email = req.params.email.trim();
 
     apiCalls.getUserByEmail(email)
@@ -57,38 +55,36 @@ module.exports.controller =  function (app, User) {
       });
   });
 
-app.get('/api/skillsbasic/email/:email', function (req, res) {
-  var email = req.params.email.trim();
+  app.get('/api/getSkillsListByEmail/:email', function (req, res) {
+    var email = req.params.email.trim();
 
-  apiCalls.getUserByEmail(email)
-    .then(skillsHelpers.getRepos)
-    .then( function (repoData) {
-      var repos = JSON.parse(repoData);
-      var languages = skillsHelpers.getLanguages(repos)
-      res.send(languages)
-    })
-  //catch error
-  .catch(function (data) {
-      res.send(data)
-    });
-
-});
-
-app.get('/api/skillscomplex/email/:email', function (req, res) {
-  var email = req.params.email.trim();
-
-  apiCalls.getUserByEmail(email)
-    .then(skillsHelpers.getRepos)
-    .then( function (data) {
-        var repoArray = JSON.parse(data)
-        var languageHash = {};
-        skillsHelpers.getAllLanguageBytes(repoArray,languageHash, res, 0)
+    apiCalls.getUserByEmail(email)
+      .then(skillsHelpers.getRepos)
+      .then( function (repoData) {
+        var repos = JSON.parse(repoData);
+        var languages = skillsHelpers.getLanguages(repos)
+        res.send(languages)
       })
-  //catch error
-  .catch(function (data) {
-      res.send(data)
-    });
-});
+    //catch error
+    .catch(function (data) {
+        res.send(data)
+      });
+  });
+
+  app.get('/api/getSkillsHashByEmail/:email', function (req, res) {
+    var email = req.params.email.trim();
+    apiCalls.getUserByEmail(email)
+      .then(skillsHelpers.getRepos)
+      .then( function (data) {
+          var repoArray = JSON.parse(data)
+          var languageHash = {};
+          skillsHelpers.getAllLanguageBytes(repoArray,languageHash, res, 0)
+        })
+    //catch error
+    .catch(function (data) {
+        res.send(data)
+      });
+  });
 
 
 } // end module

@@ -26,33 +26,24 @@ var express = require('express'),
 
 app.use(morgan('combined'));
 
-
 app.get('/', function(req, res) {
   res.send('landing page')
 });
 
 app.get('/ratelimit', apiCalls.rateLimit);
 
-
-app.get('/testing', function (req, res) {
+app.get('/playground', function (req, res) {
   function getCount(){
     return User.count()
     .then(function (c) {
       console.log(c);
     })
   };
-  var x =getCount()
-  console.log('?',x);
-
-})
-
-
+});
 
 app.listen(3000, function() {
   console.info('Listening on  port 3000...')
-})
-
-
+});
 
 fs.readdirSync('./routes').forEach(function (file) {
   if(file.substr(-3) == '.js') {

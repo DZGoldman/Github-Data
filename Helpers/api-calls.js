@@ -3,8 +3,10 @@ var requestOptions = require('./app-helpers').requestOptions,
 module.exports = {
   rateLimit: function (req, res) {
       requestOptions.url = 'https://api.github.com/rate_limit'
-      request(requestOptions, function(err, resp, body) {
-        res.send(body)
+      rp(requestOptions).then( function(data) {
+        res.send(data)
+      }).catch(function (data) {
+        res.send(data)
       })
   },
   getReposByGitName: function(username) {
@@ -19,7 +21,6 @@ module.exports = {
 
   getReposFromEmailSearch: function(data) {
     requestOptions.url = data.items.repos_url
-    console.log(requestOptions.url);
     return rp(requestOptions)
   },
 
@@ -27,5 +28,4 @@ module.exports = {
     requestOptions.url = languages_url
     return rp(requestOptions)
   }
-
 }
