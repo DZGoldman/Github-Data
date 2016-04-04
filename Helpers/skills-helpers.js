@@ -1,5 +1,6 @@
 var apiCalls = require('./api-calls.js')
 
+//Helper functions for gathering user's skills:
 var skillHelpersHash = {
 
   getRepos: function (userData) {

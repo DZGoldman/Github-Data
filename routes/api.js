@@ -4,7 +4,9 @@ var skillsHelpers = require('../Helpers/skills-helpers.js')
 module.exports.controller =  function (app, User) {
 
   app.get('/api/getReposByUsername/:username',function (req,res) {
+    //username is route parameter:
     var userName = req.params.username.trim();
+    //request repos from api:
     apiCalls.getReposByGitName(userName)
     .then(function (data) {
         res.send(data)
@@ -14,6 +16,7 @@ module.exports.controller =  function (app, User) {
       })
   });
 
+//Skills List: List of primary lanugages in all of the user's repos:
   app.get('/api/getSkillsListByUsername/:username', function (req,res) {
     var userName = req.params.username.trim();
     function getLangList (repoData) {
@@ -21,8 +24,9 @@ module.exports.controller =  function (app, User) {
       var languages = skillsHelpers.getLanguages(repos)
       res.send(languages)
     };
-
+      //request repos from api:
     apiCalls.getReposByGitName(userName)
+    //get primary lanugages for each repo
       .then(getLangList)
     //catch error
 
@@ -31,11 +35,14 @@ module.exports.controller =  function (app, User) {
     })
   });
 
+//Skills hash: Hash of total bytes of each language in all of user's repos
   app.get('/api/getSkillsHashByUsername/:username', function (req,res) {
     var userName = req.params.username.trim();
+    //request repos from api:
     apiCalls.getReposByGitName(userName)
-    .then(function (data) {
-        var repoArray = JSON.parse(data)
+    .then(function (repos) {
+      //build out a language hash from the repos JSON
+        var repoArray = JSON.parse(repos)
         var languageHash = {};
         skillsHelpers.getAllLanguageBytes(repoArray,languageHash, res, 0)
       })
@@ -43,8 +50,9 @@ module.exports.controller =  function (app, User) {
 
   app.get('/api/getReposByEmail/:email', function (req, res) {
     var email = req.params.email.trim();
-
+    //Perform search by email from API
     apiCalls.getUserByEmail(email)
+    //get User's repos
       .then(skillsHelpers.getRepos)
       .then(function (data) {
           res.send(data)
@@ -57,9 +65,11 @@ module.exports.controller =  function (app, User) {
 
   app.get('/api/getSkillsListByEmail/:email', function (req, res) {
     var email = req.params.email.trim();
-
+        //Perform search by email from API
     apiCalls.getUserByEmail(email)
+      // get User's repos
       .then(skillsHelpers.getRepos)
+      // get language list by iterating through each repo:
       .then( function (repoData) {
         var repos = JSON.parse(repoData);
         var languages = skillsHelpers.getLanguages(repos)
@@ -73,8 +83,11 @@ module.exports.controller =  function (app, User) {
 
   app.get('/api/getSkillsHashByEmail/:email', function (req, res) {
     var email = req.params.email.trim();
+    //Perform search by email from API
     apiCalls.getUserByEmail(email)
+    // get User's repos
       .then(skillsHelpers.getRepos)
+      //build out a language hash from the repos JSON
       .then( function (data) {
           var repoArray = JSON.parse(data)
           var languageHash = {};

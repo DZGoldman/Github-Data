@@ -5,7 +5,7 @@ sheetHelpers = require ('../Helpers/sheet-helpers.js'),
   requestOptions = appHelpers.requestOptions,
   request = require('request');
 
-//needs serious refactoring
+//needs serious refactoring (with request promise, using new api-calls helpers, etc.)
   module.exports.controller =  function (app, User) {
 
 

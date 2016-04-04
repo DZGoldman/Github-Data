@@ -1,4 +1,5 @@
 var secrets = require('../secrets.js')
+//parameters for making requests to Github api:
 
 module.exports = {
 requestOptions: {

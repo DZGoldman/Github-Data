@@ -1,6 +1,8 @@
 var requestOptions = require('./app-helpers').requestOptions,
   rp = require('request-promise');
+  //All requests to the Github api go here:
 module.exports = {
+
   rateLimit: function (req, res) {
       requestOptions.url = 'https://api.github.com/rate_limit'
       rp(requestOptions).then( function(data) {
@@ -28,4 +30,5 @@ module.exports = {
     requestOptions.url = languages_url
     return rp(requestOptions)
   }
-}
+
+} // end module
