@@ -7,8 +7,6 @@ ToDo:
 
 
 
-
-
 Done:
 - DONE Set up authenticaion
 - DONE Configure pg database
