@@ -38,11 +38,17 @@ app.get('/api/ratelimit', apiCalls.rateLimit);
 //route for testing thiings out
 app.get('/playground', function (req, res) {
   function getCount(){
-    return User.count()
-    .then(function (c) {
-      console.log(c);
-    })
+    return {
+      then: function (cb) {
+        cb(43)
+      }
+    }
   };
+
+
+  getCount().then(function (number) {
+    console.log(number);
+  })
 });
 
 //Link server:
