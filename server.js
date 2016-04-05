@@ -15,6 +15,8 @@ var express = require('express'),
   CronJob = require('cron').CronJob,
   fs = require ('fs');
 
+  app.use(  express.static(__dirname+'/public'));
+
   //Sync all tables in database:
   sequelize.sync().then(function () {
     console.log('tables synced');
