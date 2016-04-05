@@ -17,7 +17,7 @@ function censor(censor) {
     app.post('/upload', function (req, res) {
       console.log('upload route');
       console.log('testing testing',req.body.data);
-      // res.send(req.body)
+      res.send(req.body.data)
 
     })
   }
