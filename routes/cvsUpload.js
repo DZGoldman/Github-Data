@@ -12,15 +12,12 @@ function censor(censor) {
 
 
 
-
-
-
-
   module.exports.controller =  function (app, User) {
 
     app.post('/upload', function (req, res) {
-
-      console.log(Object.keys(req))
+      console.log('upload route');
+      console.log('testing testing',req.body.data);
+      // res.send(req.body)
 
     })
   }

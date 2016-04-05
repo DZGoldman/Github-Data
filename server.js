@@ -13,9 +13,11 @@ var express = require('express'),
   apiCalls = require('./Helpers/api-calls.js'),
   skillHelpers = require('./Helpers/skills-helpers.js'),
   CronJob = require('cron').CronJob,
-  fs = require ('fs');
+  fs = require ('fs'),
+  bodyParser = require('body-parser');
 
   app.use(  express.static(__dirname+'/public'));
+  app.use(bodyParser())
 
   //Sync all tables in database:
   sequelize.sync().then(function () {
