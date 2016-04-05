@@ -3,11 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-html landing page
 
+<form action="/upload/" method="POST" enctype="multipart/form-data">
+<input type="file" name="groupfile">
+<button type="submit" class="btn">Submit</button>
+</form>
+
+<br><br>
+
+<div id="dvImportSegments" class="fileupload ">
+    <fieldset>
+        <legend>Upload your CSV File</legend>
+            <input type="file" name="File Upload" id="txtFileUpload" accept=".csv" />
+   </fieldset>
+</div>
 <script src= 'lib/jquery/dist/jquery.js'></script>
+<script src="lib/jquery-csv.js"></script>
 <script src = 'app.js'></script>
 </body>
 </html>
