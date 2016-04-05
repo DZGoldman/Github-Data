@@ -29,7 +29,7 @@ app.get('/', function(req, res) {
 });
 
 //Get current rate limit status (5000 calls per hour)
-app.get('/ratelimit', apiCalls.rateLimit);
+app.get('/api/ratelimit', apiCalls.rateLimit);
 
 //route for testing thiings out
 app.get('/playground', function (req, res) {
