@@ -1,7 +1,7 @@
 $(function() {
   console.log('Hello, Dave.');
 
-  // importing methods from https://cmatskas.com/importing-csv-files-using-jquery-and-html5/x
+  // code here is (largely) from https://cmatskas.com/importing-csv-files-using-jquery-and-html5/x
   document.getElementById('txtFileUpload').addEventListener('change', upload, false);
 
   function browserSupportFileUpload() {
@@ -24,12 +24,9 @@ $(function() {
       reader.readAsText(file);
       reader.onload = function(event) {
         var csvData = event.target.result;
-        // console.log(csvData);
         data = $.csv.toObjects(csvData);
-        // console.log(data);
-        console.log(data.length);
         if (data && data.length > 0) {
-          console.log('Imported -' + data.length + '- rows successfully!');
+          console.log('Imported -' + data.length + '- rows into the browser successfully!');
         } else {
           alert('No data to import!');
         };
