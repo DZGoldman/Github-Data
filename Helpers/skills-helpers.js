@@ -3,12 +3,12 @@ var apiCalls = require('./api-calls.js')
 //Helper functions for gathering user's skills:
 var skillHelpersHash = {
   buildUserFromCSV: function (dbUser, csvUser) {
-          for(key in csvUser){
-            var value = csvUser[key]
-            if (value) {
-              dbUser[key] = value;
-            }else{
-              console.log('got no', key);
+        for(key in csvUser){
+          var value = csvUser[key]
+          if (value) {
+            dbUser[key] = value;
+          }else{
+                console.log('got no', key);
             }
           }
           return dbUser

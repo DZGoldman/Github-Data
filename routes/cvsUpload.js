@@ -1,5 +1,6 @@
 var skillsHelpers = require('../Helpers/skills-helpers.js');
-var apiCalls = require('../Helpers/api-calls.js')
+var apiCalls = require('../Helpers/api-calls.js');
+var CSVHelpers = require('../Helpers/csv-helpers.js')
 
 
 module.exports.controller =  function (app, User) {
@@ -47,9 +48,11 @@ module.exports.controller =  function (app, User) {
 
     saveUser(usersArray, 0)
   })
-  
+
 
   app.post('/export-csv', function (req, res) {
+    var usersArray = req.body.data
+    CSVHelpers.saveAsCSV(usersArray)
 
   })
 }
