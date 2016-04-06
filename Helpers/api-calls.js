@@ -3,7 +3,6 @@
 var secrets = require('../secrets.js'),
 rp = require('request-promise'),
   //parameters for making requests to Github api:
-
   requestOptions = {
       url: '', //URL to hit
       method: 'GET', //Specify the method

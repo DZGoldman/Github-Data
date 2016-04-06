@@ -1,7 +1,6 @@
 var express = require('express'),
   app = express(),
   morgan = require('morgan'),
-  request = require('request'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
