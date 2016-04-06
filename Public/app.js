@@ -76,7 +76,12 @@ $(function() {
     }
   }
 
-
+  $.ajax({
+    type: 'get',
+    url: '/playground'
+  }).done(function () {
+    console.log('done');
+  })
 
 
 
