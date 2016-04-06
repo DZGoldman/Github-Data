@@ -1,8 +1,22 @@
-var requestOptions = require('./app-helpers').requestOptions,
-  rp = require('request-promise');
+
+
+var secrets = require('../secrets.js'),
+rp = require('request-promise'),
+  //parameters for making requests to Github api:
+
+  requestOptions = {
+      url: '', //URL to hit
+      method: 'GET', //Specify the method
+      headers: {
+        'user-agent': secrets.username
+      },
+      auth: {
+        user: secrets.username,
+        password: secrets.password
+      }
+    }
   //All requests to the Github api go here:
 module.exports = {
-
   rateLimit: function (req, res) {
       requestOptions.url = 'https://api.github.com/rate_limit'
       rp(requestOptions).then( function(data) {
