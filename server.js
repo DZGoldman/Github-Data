@@ -35,18 +35,7 @@ app.get('/', function(req, res) {
 
 //route for testing thiings out
 app.get('/playground', function (req, res) {
-  function getCount(){
-    return {
-      then: function (cb) {
-        cb(43)
-      }
-    }
-  };
-
-
-  getCount().then(function (number) {
-    console.log(number);
-  })
+  res.download('users.csv')
 });
 
 //Link server:

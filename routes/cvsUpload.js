@@ -51,8 +51,32 @@ module.exports.controller =  function (app, User) {
 
 
   app.post('/export-csv', function (req, res) {
-    var usersArray = req.body.data
-    CSVHelpers.saveAsCSV(usersArray)
+    var usersArray = req.body.data;
+    var len = usersArray.length;
+    var index =0;
+
+    function addSkills(usersArray, index) {
+      var csvUser = usersArray[index];
+      var username = csvUser.giturl.split('https://github.com/')[1];
+      apiCalls.getReposByGitName(username)
+      .then(function (repoStr) {
+        var repos = JSON.parse(repoStr)
+        var languages = skillsHelpers.getLanguages(repos)
+        console.log(languages);
+        csvUser.skills = languages
+        recurIfNotDone(len, index)
+      })
+    };
+
+    addSkills(usersArray, 0)
+
+    function recurIfNotDone(len, index) {
+      if (index<len-1) {
+        addSkills(usersArray, index+1)
+      }else{
+        CSVHelpers.saveAsCSV(usersArray, res)
+      }
+    };
 
   })
 }
