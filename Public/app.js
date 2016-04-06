@@ -56,6 +56,12 @@ $(function() {
           }
         });
       }else if (action=='export-csv') {
+        $.ajax({
+          dataType: 'JSON',
+          data: {data:data},
+          type: 'POST',
+          url: '/export-csv'
+        })
 
       }
 
