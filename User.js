@@ -3,6 +3,7 @@ module.exports =function (sequelize, Datatypes) {
     username: Datatypes.STRING,
     email: {
             type:Datatypes.STRING,
+            unique: true,
             validate:{
             isEmail: true
             }

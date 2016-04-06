@@ -2,6 +2,17 @@ var apiCalls = require('./api-calls.js')
 
 //Helper functions for gathering user's skills:
 var skillHelpersHash = {
+  buildUserFromCSV: function (dbUser, csvUser) {
+          for(key in csvUser){
+            var value = csvUser[key]
+            if (value) {
+              dbUser[key] = value;
+            }else{
+              console.log('got no', key);
+            }
+          }
+          return dbUser
+        },
 
   getRepos: function (userData) {
     var result = JSON.parse(userData)
@@ -36,29 +47,6 @@ var skillHelpersHash = {
     return languageHash
   },
 
-  //messy from here on down:
-
-  getUsersSkills: function(error, response, data, user, userIndex, len,getSkills, errorCounter) {
-      if (error) {
-        throw error
-      };
-      var status = response.statusCode;
-      if (status >= 200 && status <= 299) {
-        var repos = JSON.parse(data);
-        var skills = skillHelpersHash.getLanguages(repos);
-        user.update({skills: skills, skills_found: true})
-          .then(function() {
-            console.log('user updated', userIndex);
-            skillHelpersHash.recurIfNotDone(userIndex, len, getSkills)
-          })
-      } else {
-        errorCounter++
-        user.update({
-            skills_found: true
-          })
-        skillHelpersHash.recurIfNotDone(userIndex, len, getSkills)
-      }
-    },
   //Takes in API response object of a user's repo, outputs an array of the user's languages
   getLanguages: function (repos) {
    var skills = [];
@@ -74,14 +62,8 @@ var skillHelpersHash = {
    }
    return skills
  },
+   //messy from here on down:
  //Checks to see if scraping is finished; if not, scrapes next element (recursively)
- recurIfNotDone: function (userIndex, len, cb) {
-   if (userIndex < len - 1) {
-     cb(userIndex + 1)
-   }else{
-     console.log('done with scrape');
-   }
- },
  logTime: function () {
    var t = new Date()
    console.log(t.getHours(),t.getMinutes(),t.getSeconds())

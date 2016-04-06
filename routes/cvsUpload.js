@@ -1,57 +1,56 @@
+var skillsHelpers = require('../Helpers/skills-helpers.js');
+var apiCalls = require('../Helpers/api-calls.js')
+
+
   module.exports.controller =  function (app, User) {
 
-    app.post('/upload2', function(req, res) {
-          res.send(req.body)
-          console.log('File size is ' + req.files.groupfile.size);
-          console.log('File size is ' + req.files.groupfile.path);
-          // var reader = csv.createCsvFileReader(req.files.groupfile.path, {
-          //                                         'separator': ',',
-          //                                         'quote': '"',
-          //                                         'escape': '"',
-          //                                         'comment': ''
-          //                                      });
-          // reader.addListener('data', function(data) {
-          //         console.log(data);
-          // });
-    });
-
     app.post('/upload', function (req, res) {
-
       var usersArray = req.body.data;
       var len = usersArray.length;
       var index =0;
+      var errors=[];
 
-      function saveUser(usersArray, index) {
-
-        var dbUser = User.build();
-        var csvUser = usersArray[index];
-        for(key in csvUser){
-          console.log(key, csvUser[key]);
-          if (csvUser[key]) {
-            console.log('he has a ', key);
-          }else{
-            console.log('got no', key);
-          }
+      function recurIfNotDone(len, index) {
+        if (index<len-1) {
+          saveUser(usersArray, index+1)
+        }else{
+          console.log('endGame');
+          res.send(errors)
         }
       }
-      saveUser(usersArray, 50)
 
-      //outline steps:
+      function saveUser(usersArray, index) {
+        //create new user for the database
+        var dbUser = User.build();
+        var csvUser = usersArray[index];
+        //give user attributes from csv
+        skillsHelpers.buildUserFromCSV(dbUser, csvUser);
+        //retrieve user's username...
+        var username = dbUser.giturl.split('https://github.com/')[1];
+        //...so we can get their skills
+        apiCalls.getReposByGitName(username)
+        .then(function (repoStr) {
+          var repos = JSON.parse(repoStr)
+          var languages = skillsHelpers.getLanguages(repos)
+          dbUser.skills = languages;
+          //save user, and recur with next user in sheet
+          dbUser.save()
 
-      //recurseive iteration:
-
-      // promise:create user:
-
-      // iterate, give appropriate parametsr
-
-      // get skills
-
-      // save
-
-      // next
+          .then(function () {
+            recurIfNotDone(len, index)
+          })
+          .catch(function (error) {
+            console.log(error);
+            errors.push(error.message+': '+error.errors[0].message);
+            recurIfNotDone(len,index)
+          })
 
 
-      // res.send(req.body.data)
+        })
+
+
+      }
+      saveUser(usersArray, 0)
 
     })
   }

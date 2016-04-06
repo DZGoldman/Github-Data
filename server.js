@@ -5,7 +5,7 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata-dev', {
+  sequelize = new Sequelize('postgres://localhost/githubdatacsv', {
     dialect: 'postgres',
     port: 5432
    }),

@@ -16,6 +16,8 @@ $(function() {
     if (!browserSupportFileUpload()) {
       alert('The File APIs are not fully supported in this browser!');
     } else {
+      $('#results').empty();
+      $('#results').text('saving data...')
       var data = null;
       var file = evt.target.files[0];
       var reader = new FileReader();
@@ -39,7 +41,18 @@ $(function() {
           url: '/upload'
         })
         .done(function (data) {
-          console.log('response:', data);
+            $('#results').empty();
+          if (data.length==0) {
+            $('#readout').text('All users successfully added!')
+          }else{
+          $('#results').text( String(data.length)+' users failed to upload...')
+            data.forEach(function (error) {
+              var $li = $('<li>');
+              $li.text(error);
+              $('#results').append($li);
+            })
+
+          }
         })
 
       };
