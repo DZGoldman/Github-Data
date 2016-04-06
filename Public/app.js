@@ -62,8 +62,7 @@ $(function() {
           type: 'POST',
           url: '/export-csv'
         })
-
-      }
+      };
 
 
 
@@ -76,12 +75,16 @@ $(function() {
     }
   }
 
+$('#test').click(function () {
   $.ajax({
     type: 'get',
     url: '/playground'
   }).done(function () {
     console.log('done');
   })
+
+})
+
 
 
 
