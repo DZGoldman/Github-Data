@@ -3,6 +3,7 @@ var apiCalls = require('../Helpers/api-calls.js')
 
 
 module.exports.controller =  function (app, User) {
+
   app.post('/upload', function (req, res) {
     var usersArray = req.body.data;
     var len = usersArray.length;
@@ -43,7 +44,9 @@ module.exports.controller =  function (app, User) {
         res.send(errors)
       }
     };
-    
+
     saveUser(usersArray, 0)
   })
+
+  app.post('/')
 }

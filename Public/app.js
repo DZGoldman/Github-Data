@@ -2,8 +2,7 @@ $(function() {
   console.log('Hello, Dave.');
 
   // code here is (largely) from https://cmatskas.com/importing-csv-files-using-jquery-and-html5/x
-  document.getElementById('upload-file').addEventListener('click', upload, false);
-
+  $('.buttons').click(upload)
   function browserSupportFileUpload() {
     var isCompatible = false;
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -13,6 +12,8 @@ $(function() {
   }
   // Method that reads and processes the selected file
   function upload(evt) {
+    console.log('uploading');
+    var action = this.id;
     if (!browserSupportFileUpload()) {
       alert('The File APIs are not fully supported in this browser!');
     } else {
@@ -20,6 +21,7 @@ $(function() {
       $('#results').text('saving data...')
       var data = null;
       var file =$('#txtFileUpload')[0];
+      console.log('this', this);
       var file = file.files[0];
       var reader = new FileReader();
       reader.readAsText(file);
@@ -32,7 +34,7 @@ $(function() {
           alert('No data to import!');
         };
 
-//my code:
+ if (action=='upload-file') {
         $.ajax({
           dataType: 'JSON',
           data: {data:data},
@@ -52,7 +54,13 @@ $(function() {
             })
 
           }
-        })
+        });
+      }else if (action=='export-csv') {
+
+      }
+
+
+
 
       };
       reader.onerror = function() {
