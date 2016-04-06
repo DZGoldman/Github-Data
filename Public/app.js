@@ -2,7 +2,7 @@ $(function() {
   console.log('Hello, Dave.');
 
   // code here is (largely) from https://cmatskas.com/importing-csv-files-using-jquery-and-html5/x
-  document.getElementById('txtFileUpload').addEventListener('change', upload, false);
+  document.getElementById('upload-file').addEventListener('click', upload, false);
 
   function browserSupportFileUpload() {
     var isCompatible = false;
@@ -19,7 +19,8 @@ $(function() {
       $('#results').empty();
       $('#results').text('saving data...')
       var data = null;
-      var file = evt.target.files[0];
+      var file =$('#txtFileUpload')[0];
+      var file = file.files[0];
       var reader = new FileReader();
       reader.readAsText(file);
       reader.onload = function(event) {
