@@ -1,6 +1,6 @@
 $(function() {
   console.log('Hello, Dave.');
-  // http://amithmit.blogspot.com/2013/04/parsing-uploaded-csv-file-using-nodejs.html
+
   // importing methods from https://cmatskas.com/importing-csv-files-using-jquery-and-html5/x
   document.getElementById('txtFileUpload').addEventListener('change', upload, false);
 
@@ -34,6 +34,7 @@ $(function() {
           alert('No data to import!');
         };
 
+//my code:
         $.ajax({
           dataType: 'JSON',
           data: {data:data},
@@ -45,7 +46,7 @@ $(function() {
           if (data.length==0) {
             $('#readout').text('All users successfully added!')
           }else{
-          $('#results').text( String(data.length)+' users failed to upload...')
+          $('#results').text( String(data.length)+' of the users failed to upload...')
             data.forEach(function (error) {
               var $li = $('<li>');
               $li.text(error);
