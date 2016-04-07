@@ -90,16 +90,9 @@ module.exports.controller =  function (app, User) {
   app.post('/getMatches', function (req, res) {
     var jobsArray = req.body.jobsArray;
     var talentArray = req.body.talentArray;
+    CSVHelpers.cleanUpJobCSV(jobsArray);
 
-    jobsArray.forEach(function (job) {
-      var skills = job.Skills
-      skills= skills.substring(1, skills.length-1);
-      skills= skills.replace(/"/g,"");
-      skills= skills.split(',');
-      job.Skills = skills;
-    });
-    console.log(jobsArray, talentArray);
-    res.send(jobsArray)
+    console.log(jobsArray.length);
   });
 
 } // end module

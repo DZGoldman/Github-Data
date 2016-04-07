@@ -18,6 +18,15 @@ module.exports = {
         if (err) console.log(err);
         res.send(usersArray)
       });
+    },
+    cleanUpJobCSV: function (jobsArray) {
+      jobsArray.forEach(function (job) {
+        var skills = job.Skills
+        skills= skills.substring(1, skills.length-1);
+        skills= skills.replace(/"/g,"");
+        skills= skills.split(',');
+        job.Skills = skills;
+      });
     }
 
 
