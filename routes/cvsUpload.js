@@ -79,4 +79,12 @@ module.exports.controller =  function (app, User) {
     };
 
   })
-}
+
+  app.post('/compare', function (req, res) {
+    var jobsArray = req.body.data;
+    res.send(jobsArray)
+  }
+
+  )
+
+} // end module

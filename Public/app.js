@@ -2,7 +2,8 @@ $(function() {
   console.log('Hello, Dave.');
 
   // code here is (largely) from https://cmatskas.com/importing-csv-files-using-jquery-and-html5/x
-  $('.buttons').click(upload)
+  $('.skills-buttons').click(upload)
+  $('.jobs-buttons').click(upload)
   function browserSupportFileUpload() {
     var isCompatible = false;
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -18,10 +19,13 @@ $(function() {
       alert('The File APIs are not fully supported in this browser!');
     } else {
       $('#results').empty();
-      $('#results').text('saving data...')
       var data = null;
-      var file =$('#txtFileUpload')[0];
-      console.log('this', this);
+      if (this.className =='skills-buttons') {
+          var file =$('#userFileUpload')[0];
+      }else if (this.className=='jobs-buttons') {
+        var file =$('#jobsFileUpload')[0];
+      }
+
       var file = file.files[0];
       var reader = new FileReader();
       reader.readAsText(file);
@@ -30,50 +34,63 @@ $(function() {
         data = $.csv.toObjects(csvData);
         if (data && data.length > 0) {
           console.log('Imported -' + data.length + '- rows into the browser successfully!');
+          sendToServer(data,action)
         } else {
           alert('No data to import!');
         };
-
- if (action=='upload-file') {
-        $.ajax({
-          dataType: 'JSON',
-          data: {data:data},
-          type: 'POST',
-          url: '/upload'
-        })
-        .done(function (data) {
-            $('#results').empty();
-          if (data.length==0) {
-            $('#readout').text('All users successfully added!')
-          }else{
-          $('#results').text( String(data.length)+' of the users failed to upload...')
-            data.forEach(function (error) {
-              var $li = $('<li>');
-              $li.text(error);
-              $('#results').append($li);
-            })
-
-          }
-        });
-      }else if (action=='export-csv') {
-        $.ajax({
-          dataType: 'JSON',
-          data: {data:data},
-          type: 'POST',
-          url: '/export-csv'
-        })
-      };
-
-
-
-
       };
       reader.onerror = function() {
         alert('Unable to read ' + file.fileName);
       };
-
     }
   }
+
+
+function sendToServer(data, action) {
+   if (action=='save-to-db') {
+         $('#results').text('gathering skills and saving data...')
+        $.ajax({
+            dataType: 'JSON',
+            data: {data:data},
+            type: 'POST',
+            url: '/upload'
+          })
+          .done(function (data) {
+              $('#results').empty();
+            if (data.length==0) {
+              alert('All users successfully added with their skills!!')
+            }else{
+            alert(String(data.length)+' of the users failed to upload. See page for errors...)')
+              data.forEach(function (error) {
+                var $li = $('<li>');
+                $li.text(error);
+                $('#results').append($li);
+              })
+            }
+          });
+        }else if (action=='export-csv') {
+             $('#results').text('gathering skills and generating new CSV...')
+          $.ajax({
+            dataType: 'JSON',
+            data: {data:data},
+            type: 'POST',
+            url: '/export-csv'
+          }).done(function (data) {
+            alert('CSV with skills created and ready for downloading!')
+            $('#download-link').show()
+          })
+        }else if (action=='compare'){
+          $.ajax({
+            dataType: 'JSON',
+            data: {data:data},
+            type: 'POST',
+            url: '/compare'
+          }).done(function (data) {
+            console.log(data);
+          })
+        }
+  }
+
 
 $('#test').click(function () {
   $.ajax({

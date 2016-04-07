@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Document</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- <form action="/upload2/" method="POST" enctype="multipart/form-data">
+  <!-- <form action="/upload2/" method="POST" enctype="multipart/form-data">
 <input type="file" name="groupfile">
 <button type="submit" class="btn">Submit-Server</button>
 </form> -->
 
-<br><br>
+  <br>
+  <br>
 
-<div id="dvImportSegments" class="fileupload ">
+  <div id="dvImportSegments" class="fileupload ">
     <fieldset>
-        <legend>Upload your CSV File- JQ</legend>
-            <input type="file" name="File Upload" id="txtFileUpload" accept=".csv" />
-               <button class='buttons' id='upload-file'>Upload Users Into DB</button>
-                <button class='buttons' id='export-csv'>Export CSV</button>
-                  <button id='test'>Test</button>
+      <legend>Upload Githhub Users CSV File</legend>
+      <input type="file" name="File Upload" id="userFileUpload" accept=".csv" />
+      <button class='skills-buttons' id='save-to-db'>Find Skills & Save to DB</button>
+      <button class='skills-buttons' id='export-csv'>Find Skills and Export as CSV</button>
+      <!-- <button id='test'>Test</button> -->
 
-   </fieldset>
-   <br>
-<a href="/docs/users3.csv" download>Download</a>
-</div>
+    </fieldset>
+    <br>
 
-<ol type='1' id='results'>
+    <br>
+    <fieldset>
+      <legend>Upload Jobs CSV</legend>
+      <input type="file" name="File Upload" id="jobsFileUpload" accept=".csv" />
+      <button class='jobs-buttons' id='compare'>Compare?</button>
 
-</ol>
-<script src= 'lib/jquery/dist/jquery.js'></script>
-<script src="lib/jquery-csv.js"></script>
-<script src = 'app.js'></script>
+    </fieldset>
+      <br> <br>
+    <a id='download-link' href="/docs/github-skills.csv" download>Download Github User CSV</a>
+
+
+  </div>
+
+  <ol type='1' id='results'>
+
+  </ol>
+  <script src='lib/jquery/dist/jquery.js'></script>
+  <script src="lib/jquery-csv.js"></script>
+  <script src='app.js'></script>
 </body>
+
 </html>

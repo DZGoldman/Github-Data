@@ -6,3 +6,7 @@ body{
 #results{
   color: red;
 }
+
+#download-link{
+  display: none
+}
