@@ -88,7 +88,7 @@ module.exports.controller =  function (app, User) {
   })
 
   app.post('/compare', function (req, res) {
-    var jobsArray = req.body.data;
+    var jobsArray = req.body.data1;
 
     jobsArray.forEach(function (job) {
       var skills = job.Skills
