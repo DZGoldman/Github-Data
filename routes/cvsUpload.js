@@ -50,7 +50,8 @@ module.exports.controller =  function (app, User) {
   })
 
 
-  app.post('/export-csv', function (req, res) {
+  app.post('/export-csv/:option', function (req, res) {
+    //options: save or send
     var usersArray = req.body.data;
     var len = usersArray.length;
     var index =0;
@@ -74,7 +75,13 @@ module.exports.controller =  function (app, User) {
       if (index<len-1) {
         addSkills(usersArray, index+1)
       }else{
-        CSVHelpers.saveAsCSV(usersArray, res)
+          var option = req.params.option;
+          if(option=='save')
+            {CSVHelpers.saveAsCSV(usersArray, res)}
+          else if (option=='send') {
+            CSVHelpers.sendToClient(usersArray, res)
+          }
+
       }
     };
 
@@ -82,7 +89,7 @@ module.exports.controller =  function (app, User) {
 
   app.post('/compare', function (req, res) {
     var jobsArray = req.body.data;
-    
+
     jobsArray.forEach(function (job) {
       var skills = job.Skills
       skills= skills.substring(1, skills.length-1);

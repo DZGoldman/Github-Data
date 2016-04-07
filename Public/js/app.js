@@ -45,53 +45,6 @@ $(function() {
     }
   }
 
-
-function sendToServer(data, action) {
-   if (action=='save-to-db') {
-         $('#results').text('gathering skills and saving data...')
-        $.ajax({
-            dataType: 'JSON',
-            data: {data:data},
-            type: 'POST',
-            url: '/upload'
-          })
-          .done(function (data) {
-              $('#results').empty();
-            if (data.length==0) {
-              alert('All users successfully added with their skills!!')
-            }else{
-            alert(String(data.length)+' of the users failed to upload. See page for errors...)')
-              data.forEach(function (error) {
-                var $li = $('<li>');
-                $li.text(error);
-                $('#results').append($li);
-              })
-            }
-          });
-        }else if (action=='export-csv') {
-             $('#results').text('gathering skills and generating new CSV...')
-          $.ajax({
-            dataType: 'JSON',
-            data: {data:data},
-            type: 'POST',
-            url: '/export-csv'
-          }).done(function (data) {
-            alert('CSV with skills created and ready for downloading!')
-            $('#download-link').show()
-          })
-        }else if (action=='compare'){
-          $.ajax({
-            dataType: 'JSON',
-            data: {data:data},
-            type: 'POST',
-            url: '/compare'
-          }).done(function (data) {
-            console.log(data);
-          })
-        }
-  }
-
-
 $('#test').click(function () {
   $.ajax({
     type: 'get',
