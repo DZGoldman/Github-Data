@@ -28,7 +28,9 @@ $(function() {
       var file = upload('talent');
       read(file, afterRead)
       function afterRead(talentData) {
-        console.log([jobData, talentData]);
+        var data = [jobData, talentData];
+        AJAX.getMatches(data)
+        .done(AJAX.doneGetMatches)
       }
     };
   });

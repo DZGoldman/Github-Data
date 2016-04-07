@@ -87,8 +87,9 @@ module.exports.controller =  function (app, User) {
 
   })
 
-  app.post('/compare', function (req, res) {
-    var jobsArray = req.body.data1;
+  app.post('/getMatches', function (req, res) {
+    var jobsArray = req.body.jobsArray;
+    var talentArray = req.body.talentArray;
 
     jobsArray.forEach(function (job) {
       var skills = job.Skills
@@ -97,10 +98,8 @@ module.exports.controller =  function (app, User) {
       skills= skills.split(',');
       job.Skills = skills;
     });
-
+    console.log(jobsArray, talentArray);
     res.send(jobsArray)
-  }
-
-  )
+  });
 
 } // end module
