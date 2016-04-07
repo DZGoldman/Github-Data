@@ -3,11 +3,22 @@ $(function() {
 
 
   $('#save-to-db').click(function(evt) {
+
     var action = this.id
-    var file = upload('talent');
-    console.log(typeof file);
-    console.log(file);
-    read(file, 'save-to-db')
+    var file = upload('talent', afterRead);
+    read(file, 'save-to-db', afterRead);
+    console.log(AJAX);
+    function afterRead(csvData) {
+      data = $.csv.toObjects(csvData);
+
+      if (data && data.length > 0) {
+        sendToServer(data, action)
+
+      } else {
+        alert('No data to import!');
+      };
+
+    };
   });
 
   $('#export-csv').click(function (evt) {
@@ -53,19 +64,12 @@ $(function() {
     }
   };
 
-  function read(file, action) {
+  function read(file, action, afterRead) {
 
     var reader = new FileReader();
     reader.readAsText(file);
     reader.onload = function(event) {
-      var csvData = event.target.result;
-      data = $.csv.toObjects(csvData);
-      if (data && data.length > 0) {
-        console.log('Imported -' + data.length + '- rows into the browser successfully!');
-        sendToServer(data, action)
-      } else {
-        alert('No data to import!');
-      };
+      afterRead(event.target.result);
     };
     reader.onerror = function() {
       alert('Unable to read ' + file.fileName);
