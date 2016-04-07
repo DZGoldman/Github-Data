@@ -47,11 +47,7 @@ function sendToServer(data, action) {
       .done(AJAX.doneExportCSV)
 
   } else if (action == 'compare') {
-
-    // AJAX.exportCSV(data, 'send')
-    //   .done(function (data) {
-    //     console.log(data);
-    //   })
+    
     $.ajax({
       dataType: 'JSON',
       data: {data1: data,
