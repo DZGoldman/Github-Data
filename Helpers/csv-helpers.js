@@ -2,7 +2,7 @@ var json2csv = require('json2csv');
 var fs = require('fs');
 
 module.exports = {
-
+//Takes in array of objects, converts to CSV file
 saveAsCSV:function(usersArray, res) {
   json2csv({data: usersArray}, function(err, csv) {
     if (err) console.log(err);
@@ -13,5 +13,4 @@ saveAsCSV:function(usersArray, res) {
       })
     });
   }
-
 }

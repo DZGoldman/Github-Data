@@ -41,7 +41,7 @@ module.exports.controller =  function (app, User) {
       if (index<len-1) {
         saveUser(usersArray, index+1)
       }else{
-        console.log('endGame');
+        //when finished, send all error messages back to the browser
         res.send(errors)
       }
     };
@@ -82,9 +82,15 @@ module.exports.controller =  function (app, User) {
 
   app.post('/compare', function (req, res) {
     var jobsArray = req.body.data;
+    
     jobsArray.forEach(function (job) {
-      job.Skills = job.Skills.split(', ')
-    })
+      var skills = job.Skills
+      skills= skills.substring(1, skills.length-1);
+      skills= skills.replace(/"/g,"");
+      skills= skills.split(',');
+      job.Skills = skills;
+    });
+
     res.send(jobsArray)
   }
 
