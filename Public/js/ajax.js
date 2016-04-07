@@ -47,15 +47,23 @@ function sendToServer(data, action) {
       .done(AJAX.doneExportCSV)
 
   } else if (action == 'compare') {
-    
-    $.ajax({
-      dataType: 'JSON',
-      data: {data1: data,
-            data2: 'skills'},
-      type: 'POST',
-      url: '/compare'
-    }).done(function(data) {
+    AJAX.exportCSV(data, 'send')
+    .done(function (data) {
       console.log(data);
+      upload('compare', 'jobs')
+
+
+
     })
+
+    // $.ajax({
+    //   dataType: 'JSON',
+    //   data: {data1: data,
+    //         data2: 'skills'},
+    //   type: 'POST',
+    //   url: '/compare'
+    // }).done(function(data) {
+    //   console.log(data);
+    // })
   }
 }

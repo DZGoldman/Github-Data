@@ -7,9 +7,9 @@ $(function() {
     upload(action, 'talent')
   });
 
-  $('.jobs-buttons').click(function (evt) {
+  $('#compare').click(function (evt) {
     var action = this.id
-    upload(action, 'jobs')
+    upload(action, 'talent')
   });
 
 
@@ -23,7 +23,6 @@ $(function() {
     }
     return isCompatible;
   };
-  
   function upload(action, source) {
 
     console.log('uploading');
