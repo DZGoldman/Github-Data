@@ -1,14 +1,6 @@
 $(function() {
   console.log('I am in here.');
 
-
-  // $('#save-to-db').hide();
-  //   $('#export-csv').hide();
-  //     $('#compare').hide();
-  //
-  // $('#userFileUpload').change(showButtons);
-  // $('#jobsFileUpload').change(showButtons)
-
   $('#save-to-db').click(function(evt) {
     var file = upload('talent');
     read(file, afterRead);
@@ -41,7 +33,7 @@ $(function() {
       }
     };
   });
-
+  //Old: hide shows buttons, still may eventually use
   // function showButtons(evt) {
   //   console.log('update');
   //   if($('#userFileUpload')[0].files.length>0){
@@ -53,5 +45,11 @@ $(function() {
   //     $('#export-csv').hide(); $('#save-to-db').hide(); $('#compare').hide();
   //   }
   // }
+    // $('#save-to-db').hide();
+    //   $('#export-csv').hide();
+    //     $('#compare').hide();
+    //
+    // $('#userFileUpload').change(showButtons);
+    // $('#jobsFileUpload').change(showButtons)
 
 })

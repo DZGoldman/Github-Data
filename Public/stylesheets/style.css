@@ -11,14 +11,14 @@ body{
   display: none;
 }
 
+#export-csv{
+  margin-left: 10px;
+}
+
 button{
-  margin: 15px
+  /*margin: 15px*/
 }
 
-input{
-  margin-left: 15px
-}
-
-legend{
-  margin-left: 15px
+body{
+  padding: 20px
 }
