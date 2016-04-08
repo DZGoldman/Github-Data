@@ -1,3 +1,5 @@
+
+// all AJAX requests and their 'done' promises live here:
 var AJAX = {
   saveToDb: function(data) {
     return $.ajax({

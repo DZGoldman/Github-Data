@@ -55,22 +55,26 @@ module.exports.controller =  function (app, User) {
     var usersArray = req.body.data;
     var len = usersArray.length;
     var index =0;
-
+    //recursive - add skills to each users
     function addSkills(usersArray, index) {
+      //curent user:
       var csvUser = usersArray[index];
+      //get username by splitting giturl:
       var username = csvUser.giturl.split('https://github.com/')[1];
+      //iterate through each repo and get each primary language
       apiCalls.getReposByGitName(username)
       .then(function (repoStr) {
         var repos = JSON.parse(repoStr)
         var languages = skillsHelpers.getLanguages(repos)
         console.log(languages);
+        //put languages on CSV
         csvUser.skills = languages
         recurIfNotDone(len, index)
       })
     };
 
     addSkills(usersArray, 0)
-
+    //test if done; it not, recur; if so, save as CSV
     function recurIfNotDone(len, index) {
       if (index<len-1) {
         addSkills(usersArray, index+1)
@@ -90,8 +94,8 @@ module.exports.controller =  function (app, User) {
   app.post('/getMatches', function (req, res) {
     var jobsArray = req.body.jobsArray;
     var talentArray = req.body.talentArray;
-    CSVHelpers.cleanUpJobCSV(jobsArray);
-    CSVHelpers.cleanUpJobCSV(talentArray)
+    CSVHelpers.cleanUpSkills(jobsArray);
+    CSVHelpers.cleanUpSkills(talentArray);
     jobsArray.forEach(function (job, jobIndex) {
       //for Each job, iterate through each potential talent
       talentArray.forEach(function (talent, talentIndex) {
@@ -107,7 +111,7 @@ module.exports.controller =  function (app, User) {
       //gives top matches to Job data:
       topMatches.forEach(function (talent, index) {
         var key = 'Match '+(index+1)
-        job[key] = 'EMAIL: '+ talent.email +'   '+ talent.count+ ' SKILL MATCHES: ' + String(talent.skills)
+        job[key] = 'EMAIL: '+ talent.email +'   '+ talent.count+ ' SKILL MATCHES.'+'   ' + 'SKILLS: '+ String(talent.skills)
       })
       //sort talents by count, grab top 5, give to Jobs Array
     })
