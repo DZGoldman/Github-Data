@@ -1,6 +1,8 @@
 $(function() {
   console.log('I am in here.');
 
+  //click events for buttons defined here:
+
   $('#save-to-db').click(function(evt) {
     var file = upload('talent');
     read(file, afterRead);

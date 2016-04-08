@@ -1,8 +1,5 @@
 
-
-  // Method that reads and processes the selected file, code (mostly) from here:
-  //https://cmatskas.com/importing-csv-files-using-jquery-and-html5
-  //helper function:
+// upload, read, parse CSV file on front end
   function browserSupportFileUpload() {
     var isCompatible = false;
     if (window.File && window.FileReader && window.FileList && window.Blob) {
