@@ -53,6 +53,16 @@ module.exports = {
       return a.count == b.count ? 0 : +(a.count > b.count) || -1;
     });
     return sorted
-  }
+  },
+    saveMatchesAsCSV: function (jobsArray, res) {
+        json2csv({data: jobsArray}, function(err, csv) {
+          if (err) console.log(err);
+          fs.writeFile('./Public/docs/job-matches.csv', csv, function(err) {
+            if (err) throw err;
+            console.log('file saved');
+            res.send(['done'])
+          })
+        });
+    }
 
   } // end module

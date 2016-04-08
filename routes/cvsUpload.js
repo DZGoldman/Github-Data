@@ -102,13 +102,16 @@ module.exports.controller =  function (app, User) {
 
       var sortedTalent = CSVHelpers.sortByCount(talentArray);
       var lastIndex = sortedTalent.length;
-      var fiveMatches = sortedTalent.slice(lastIndex-5, lastIndex+1);
-      job.match = fiveMatches;
-      console.log(fiveMatches.length, fiveMatches);
-      res.send('done')
+      var desiredMatches = 3;
+      var topMatches = sortedTalent.slice(lastIndex-desiredMatches, lastIndex+1);
+      //gives top matches to Job data:
+      topMatches.forEach(function (talent, index) {
+        var key = 'Match '+(index+1)
+        job[key] = talent.email + ' ' + String(talent.skills)
+      })
       //sort talents by count, grab top 5, give to Jobs Array
     })
-
+    CSVHelpers.saveMatchesAsCSV(jobsArray, res)
   });
 
 } // end module
