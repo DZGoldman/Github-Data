@@ -1,0 +1,24 @@
+body{
+  background-color: lightgrey;
+  color: black;
+}
+
+#results{
+  color: red;
+}
+
+#download-matches-link, #download-talent-link {
+  display: none;
+}
+
+button{
+  margin: 15px
+}
+
+input{
+  margin-left: 15px
+}
+
+legend{
+  margin-left: 15px
+}

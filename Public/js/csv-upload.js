@@ -1,7 +1,7 @@
 
 
   // Method that reads and processes the selected file, code (mostly) from here:
-  //https://cmatskas.com/importing-csv-files-using-jquery-and-html5/x
+  //https://cmatskas.com/importing-csv-files-using-jquery-and-html5
   //helper function:
   function browserSupportFileUpload() {
     var isCompatible = false;
@@ -31,7 +31,6 @@
   };
 
   function read(file, afterRead) {
-
     var reader = new FileReader();
     reader.readAsText(file);
     reader.onload = function(event) {
@@ -47,5 +46,4 @@
     reader.onerror = function() {
       alert('Unable to read ' + file.fileName);
     };
-
-  }
+  };

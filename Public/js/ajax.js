@@ -34,6 +34,7 @@ var AJAX = {
 
   doneExportCSV: function(data) {
     alert('CSV with skills created and ready for downloading!')
+    $('#results').empty();
     $('#download-talent-link').show()
   },
 
