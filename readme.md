@@ -3,7 +3,7 @@ Github-data is an application for uploading, analyzing, and exporting data of gi
 
 
 ### Functionality
-- **Saving User Data**: A CSV file of github users can be uploaded via a CSV file; the app will find each user's skills (programming languages) and save the data into the database. The CSV file should have this basic structure:
+- **Saving User Data**: A CSV file of github users can be uploaded via a CSV file; the app will find each user's skills from using Github's API and save the data into the database. The CSV file should have this basic structure:
 
 (*link file here*)
 
@@ -24,12 +24,12 @@ Github-data is an application for uploading, analyzing, and exporting data of gi
 SELECT emails, giturl FROM users WHERE skills @> '{JavaScript, Ruby}'::text[] LIMIT 100;
 ```
 
-###
-Api Limit
+### Note on Api Limit
+Gathering a user's skills requires a single request to Github's API. The rate limit for an authenticated user of the API is 5000 requests per hour. The current status of the app's rate limit can be retrieved by hitting the '/api/ratelimit' route.
 
 #### Technologies Used:
 - **Node-Express (with Morgan and body-parser)**
-- **PostgreSQL/ Sequelize**
+- **PostgreSQL/ PG/ Sequelize**
 - **Request-Promise**
 - **json2csv / jquery-csv**: CSV uploading and parsing
 - **fs** Creating CSV file for download
