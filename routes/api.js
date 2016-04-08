@@ -14,8 +14,8 @@ module.exports.controller =  function (app, User) {
     .then(function (data) {
         res.send(data)
       })
-    .catch(function (data) {
-        res.send(data)
+    .catch(function (error) {
+        res.send(error)
       })
   });
 
@@ -61,8 +61,8 @@ module.exports.controller =  function (app, User) {
           res.send(data)
         })
     //catch error
-    .catch(function (data) {
-        res.send(data)
+    .catch(function (error) {
+        res.send(error)
       });
   });
 
@@ -79,8 +79,8 @@ module.exports.controller =  function (app, User) {
         res.send(languages)
       })
     //catch error
-    .catch(function (data) {
-        res.send(data)
+    .catch(function (error) {
+        res.send(error)
       });
   });
 
@@ -97,16 +97,10 @@ module.exports.controller =  function (app, User) {
           skillsHelpers.getAllLanguageBytes(repoArray,languageHash, res, 0)
         })
     //catch error
-    .catch(function (data) {
-        res.send(data)
+    .catch(function (error) {
+        res.send(error)
       });
   });
-
-  app.get('/searchGithub', function (req, res) {
-    //search by location and skills
-    //check if hirable, if so, get all languages, save basic stuff like email and username
-  })
-
 
 
 

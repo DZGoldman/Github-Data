@@ -9,6 +9,9 @@ module.exports.controller = function(app, User) {
     .then(function (data) {
       res.send(data)
     })
+    .catch(function (error) {
+        res.send(error)
+      })
 
   })
 
