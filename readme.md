@@ -28,10 +28,14 @@ SELECT emails, giturl FROM users WHERE skills @> '{JavaScript, Ruby}'::text[] LI
 Gathering a user's skills requires a single request to Github's API. The rate limit for an authenticated user of the API is 5000 requests per hour. The current status of the app's rate limit can be retrieved by hitting the '/api/ratelimit' route.
 
 #### Technologies Used:
-- **Node-Express (with Morgan and body-parser)**
+- **Node-Express (with Morgan and Body-parser)**
 - **PostgreSQL/ PG/ Sequelize**
 - **Request-Promise**
-- **json2csv / jquery-csv**: CSV uploading and parsing
+- **json2csv / jQuery-csv**: CSV uploading and parsing
 - **fs** Creating CSV file for download
 - **Cron**: Cron job for initial data-scrape (not currently actively used by the app)
 - **Natural**: Implementation of Jaro Winkler distance algorithm for inexact string matching
+
+### To Do
+- Searching github for job matches
+- Properly configure environmental variables for hosting on heroku
