@@ -42,6 +42,17 @@ module.exports = {
   getLanguagesBytes: function(languages_url) {
     requestOptions.url = languages_url
     return rp(requestOptions)
+  },
+
+  //fixed: type- user; params- location, language
+  searchUsers: function (language, location) {
+    requestOptions.url='https://api.github.com/search/users?q=language%3A'
+    +language+'location%3A'
+    +location+'&type=Users';
+
+    return rp(requestOptions)
+    //check if hirable?
+
   }
 
 } // end module

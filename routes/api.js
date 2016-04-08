@@ -102,6 +102,11 @@ module.exports.controller =  function (app, User) {
       });
   });
 
+  app.get('/searchGithub', function (req, res) {
+    //search by location and skills
+    //check if hirable, if so, get all languages, save basic stuff like email and username
+  })
+
 
 
 
