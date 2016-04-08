@@ -1,5 +1,7 @@
 var json2csv = require('json2csv');
 var fs = require('fs');
+var natural = require('natural');
+
 
 module.exports = {
     //Takes in array of objects, converts to CSV file
@@ -36,7 +38,8 @@ module.exports = {
       // console.log(typeof talentSkills[talentIndex], typeof jobSkills[jobIndex]);
       while ( (jobIndex < jobSkillsLen) && (talentIndex < talentSkillsLen) ) {
         //TODO Elastic matching with natural JS?
-        if ( jobSkills[jobIndex] == talentSkills[talentIndex] ) {
+
+        if (natural.JaroWinklerDistance(jobSkills[jobIndex].toLowerCase(),talentSkills[talentIndex].toLowerCase() )>0.8) {
           matchCount++;
           jobIndex++;
           talentIndex++
