@@ -32,7 +32,7 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - **PostgreSQL/ PG/ Sequelize**
 - **Request-Promise**
 - **json2csv / jQuery-csv**: CSV uploading and parsing
-- **fs** Creating CSV file for download
+- **fs**: Creating CSV file for download
 - **Cron**: Cron job for initial data-scrape (not currently actively used by the app)
 - **Natural**: Implementation of Jaro Winkler distance algorithm for inexact string matching
 
