@@ -104,10 +104,12 @@ module.exports.controller =  function (app, User) {
       var lastIndex = sortedTalent.length;
       var desiredMatches = 3;
       var topMatches = sortedTalent.slice(lastIndex-desiredMatches, lastIndex+1);
+      console.log(topMatches);
+      res.send('done')
       //gives top matches to Job data:
       topMatches.forEach(function (talent, index) {
         var key = 'Match '+(index+1)
-        job[key] = talent.email + ' ' + String(talent.skills)
+        job[key] = 'EMAIL: '+ talent.email +'   '+ talent.count+ ' SKILL MATCHES: ' + String(talent.skills)
       })
       //sort talents by count, grab top 5, give to Jobs Array
     })
