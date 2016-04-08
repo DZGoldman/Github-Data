@@ -37,7 +37,7 @@ module.exports = {
       // console.log(talentSkills, jobSkills);
       // console.log(typeof talentSkills[talentIndex], typeof jobSkills[jobIndex]);
       while ( (jobIndex < jobSkillsLen) && (talentIndex < talentSkillsLen) ) {
-        //TODO Elastic matching with natural JS?
+        // Elastic matching with natural JS
 
         if (natural.JaroWinklerDistance(jobSkills[jobIndex].toLowerCase(),talentSkills[talentIndex].toLowerCase() )>0.8) {
           matchCount++;
