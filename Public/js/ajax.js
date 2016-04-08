@@ -2,6 +2,7 @@
 // all AJAX requests and their 'done' promises live here:
 var AJAX = {
   saveToDb: function(data) {
+    $('#results').text('Gathering skills and saving into database...')
     return $.ajax({
       dataType: 'JSON',
       data: {data: data},

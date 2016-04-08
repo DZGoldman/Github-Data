@@ -45,7 +45,7 @@ module.exports = {
       var matchCount = 0;
       while ( (jobIndex < jobSkillsLen) && (talentIndex < talentSkillsLen) ) {
         // Elastic matching with natural JS: if current strings are 'equal'
-        if (natural.JaroWinklerDistance(jobSkills[jobIndex].toLowerCase(),talentSkills[talentIndex].toLowerCase() )>0.8) {
+        if (natural.JaroWinklerDistance( jobSkills[jobIndex].toLowerCase(),talentSkills[talentIndex].toLowerCase() )>0.8) {
           //count as match, increment both arrays
           matchCount++;
           jobIndex++;
