@@ -7,6 +7,11 @@ body{
   color: red;
 }
 
-#download-link{
+#download-talent-link{
   display: none
+}
+
+#download-matches-link{
+  display: none
+
 }

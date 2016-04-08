@@ -77,7 +77,7 @@ module.exports.controller =  function (app, User) {
       }else{
           var option = req.params.option;
           if(option=='save')
-            {CSVHelpers.saveAsCSV(usersArray, res)}
+            {CSVHelpers.saveAsCSV(usersArray, './Public/docs/github-skills.csv', res)}
           else if (option=='send') {
             CSVHelpers.sendToClient(usersArray, res)
           }
@@ -104,8 +104,6 @@ module.exports.controller =  function (app, User) {
       var lastIndex = sortedTalent.length;
       var desiredMatches = 3;
       var topMatches = sortedTalent.slice(lastIndex-desiredMatches, lastIndex+1);
-      console.log(topMatches);
-      res.send('done')
       //gives top matches to Job data:
       topMatches.forEach(function (talent, index) {
         var key = 'Match '+(index+1)
@@ -113,7 +111,7 @@ module.exports.controller =  function (app, User) {
       })
       //sort talents by count, grab top 5, give to Jobs Array
     })
-    CSVHelpers.saveMatchesAsCSV(jobsArray, res)
+    CSVHelpers.saveAsCSV(jobsArray,'./Public/docs/job-matches.csv', res)
   });
 
 } // end module

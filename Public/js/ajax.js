@@ -34,7 +34,7 @@ var AJAX = {
 
   doneExportCSV: function(data) {
     alert('CSV with skills created and ready for downloading!')
-    $('#download-link').show()
+    $('#download-talent-link').show()
   },
 
   getMatches: function (data) {
@@ -49,5 +49,7 @@ var AJAX = {
   },
   doneGetMatches: function (data) {
     console.log('done getting matches');
+    alert('Job Matches Found and Ready to download!')
+    $('#download-matches-link').show()
   }
 } // end AJAX module
