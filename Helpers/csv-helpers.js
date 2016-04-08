@@ -35,7 +35,7 @@ module.exports = {
       // console.log(talentSkills, jobSkills);
       // console.log(typeof talentSkills[talentIndex], typeof jobSkills[jobIndex]);
       while ( (jobIndex < jobSkillsLen) && (talentIndex < talentSkillsLen) ) {
-
+        //TODO Elastic matching with natural JS?
         if ( jobSkills[jobIndex] == talentSkills[talentIndex] ) {
           matchCount++;
           jobIndex++;
@@ -46,9 +46,13 @@ module.exports = {
           talentIndex++
         }
       }
-      console.log(matchCount);
       return matchCount
-    }
-
+    },
+    sortByCount: function (talentArray) {
+    var sorted =  talentArray.sort(function(a, b){
+      return a.count == b.count ? 0 : +(a.count > b.count) || -1;
+    });
+    return sorted
+  }
 
   } // end module

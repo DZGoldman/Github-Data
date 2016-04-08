@@ -92,12 +92,21 @@ module.exports.controller =  function (app, User) {
     var talentArray = req.body.talentArray;
     CSVHelpers.cleanUpJobCSV(jobsArray);
     CSVHelpers.cleanUpJobCSV(talentArray)
-    jobsArray.forEach(function (job) {
-      talentArray.forEach(function (talent) {
-        // console.log(talent);
+    jobsArray.forEach(function (job, jobIndex) {
+      //for Each job, iterate through each potential talent
+      talentArray.forEach(function (talent, talentIndex) {
+        //get number of skills matches between job and talent for each talent
         var count = CSVHelpers.getMatchCount(job.skills, talent.skills);
-        // console.log(count);
+        talent.count = count;
       })
+
+      var sortedTalent = CSVHelpers.sortByCount(talentArray);
+      var lastIndex = sortedTalent.length;
+      var fiveMatches = sortedTalent.slice(lastIndex-5, lastIndex+1);
+      job.match = fiveMatches;
+      console.log(fiveMatches.length, fiveMatches);
+      res.send('done')
+      //sort talents by count, grab top 5, give to Jobs Array
     })
 
   });
