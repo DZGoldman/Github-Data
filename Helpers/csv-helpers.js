@@ -15,12 +15,14 @@ module.exports = {
         })
       });
     },
+
     sendToClient: function(usersArray, res) {
       json2csv({data: usersArray}, function(err, csv) {
         if (err) console.log(err);
         res.send(usersArray)
       });
     },
+
     cleanUpJobCSV: function (jobsArray) {
       jobsArray.forEach(function (job) {
         var skills = job.skills
@@ -30,15 +32,13 @@ module.exports = {
         job.skills = skills.sort();
       });
     },
+
     getMatchCount: function (jobSkills, talentSkills) {
       var jobIndex = 0, talentIndex = 0;
       var jobSkillsLen = jobSkills.length, talentSkillsLen = talentSkills.length;
       var matchCount = 0;
-      // console.log(talentSkills, jobSkills);
-      // console.log(typeof talentSkills[talentIndex], typeof jobSkills[jobIndex]);
       while ( (jobIndex < jobSkillsLen) && (talentIndex < talentSkillsLen) ) {
         // Elastic matching with natural JS
-
         if (natural.JaroWinklerDistance(jobSkills[jobIndex].toLowerCase(),talentSkills[talentIndex].toLowerCase() )>0.8) {
           matchCount++;
           jobIndex++;
@@ -51,21 +51,22 @@ module.exports = {
       }
       return matchCount
     },
+
     sortByCount: function (talentArray) {
     var sorted =  talentArray.sort(function(a, b){
       return a.count == b.count ? 0 : +(a.count > b.count) || -1;
     });
     return sorted
   },
+
     saveMatchesAsCSV: function (jobsArray, res) {
-        json2csv({data: jobsArray}, function(err, csv) {
-          if (err) console.log(err);
-          fs.writeFile('./Public/docs/job-matches.csv', csv, function(err) {
-            if (err) throw err;
-            console.log('file saved');
-            res.send(['done'])
-          })
-        });
+      json2csv({data: jobsArray}, function(err, csv) {
+        if (err) console.log(err);
+        fs.writeFile('./Public/docs/job-matches.csv', csv, function(err) {            if (err) throw err;
+          console.log('file saved');
+          res.send(['done'])
+        })
+      });
     }
 
   } // end module
