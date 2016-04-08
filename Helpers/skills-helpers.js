@@ -56,11 +56,11 @@ var skillHelpersHash = {
      if (language && !languagesHash[language] ) {
        languagesHash[language]=true
      }
-   }) //end for each repo
+   }); //end for each repo
    for (language in languagesHash){
      skills.push(language)
-   }
-   return skills
+   };
+   return skills.sort()
  },
    //messy from here on down:
  //Checks to see if scraping is finished; if not, scrapes next element (recursively)

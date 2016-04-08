@@ -25,7 +25,7 @@ module.exports = {
         skills= skills.substring(1, skills.length-1);
         skills= skills.replace(/"/g,"");
         skills= skills.split(',');
-        job.Skills = skills;
+        job.Skills = skills.sort();
       });
     }
 
