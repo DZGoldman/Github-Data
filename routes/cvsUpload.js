@@ -91,8 +91,15 @@ module.exports.controller =  function (app, User) {
     var jobsArray = req.body.jobsArray;
     var talentArray = req.body.talentArray;
     CSVHelpers.cleanUpJobCSV(jobsArray);
+    CSVHelpers.cleanUpJobCSV(talentArray)
+    jobsArray.forEach(function (job) {
+      talentArray.forEach(function (talent) {
+        // console.log(talent);
+        var count = CSVHelpers.getMatchCount(job.skills, talent.skills);
+        // console.log(count);
+      })
+    })
 
-    console.log(jobsArray.length);
   });
 
 } // end module

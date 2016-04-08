@@ -21,12 +21,33 @@ module.exports = {
     },
     cleanUpJobCSV: function (jobsArray) {
       jobsArray.forEach(function (job) {
-        var skills = job.Skills
+        var skills = job.skills
         skills= skills.substring(1, skills.length-1);
         skills= skills.replace(/"/g,"");
         skills= skills.split(',');
-        job.Skills = skills.sort();
+        job.skills = skills.sort();
       });
+    },
+    getMatchCount: function (jobSkills, talentSkills) {
+      var jobIndex = 0, talentIndex = 0;
+      var jobSkillsLen = jobSkills.length, talentSkillsLen = talentSkills.length;
+      var matchCount = 0;
+      // console.log(talentSkills, jobSkills);
+      // console.log(typeof talentSkills[talentIndex], typeof jobSkills[jobIndex]);
+      while ( (jobIndex < jobSkillsLen) && (talentIndex < talentSkillsLen) ) {
+
+        if ( jobSkills[jobIndex] == talentSkills[talentIndex] ) {
+          matchCount++;
+          jobIndex++;
+          talentIndex++
+        }else if (jobSkills[jobIndex] < talentSkills[talentIndex]) {
+          jobIndex++
+        }else if (jobSkills[jobIndex] > talentSkills[talentIndex]) {
+          talentIndex++
+        }
+      }
+      console.log(matchCount);
+      return matchCount
     }
 
 
