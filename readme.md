@@ -1,7 +1,6 @@
 
 Github-Data is an application for uploading, analyzing, and exporting data of Github users, particularly the user's particular skills.
 
-
 ### Features
 - **Saving User Data**: A CSV file of Github users can be uploaded via a CSV file; the app will find each user's skills from using Github's API and save the data into the database. The CSV file should have this basic structure:
 
@@ -22,6 +21,32 @@ Github-Data is an application for uploading, analyzing, and exporting data of Gi
 
 ```sql
 SELECT emails, giturl FROM users WHERE skills @> '{JavaScript, Ruby}'::text[] LIMIT 100;
+```
+
+
+### Installation Instructions
+1. Clone repo
+2. Enter root directory
+3. In terminal, run:
+```bash
+npm install
+```
+4. Create a secrets.js file in root directory:
+```bash
+touch secrets.js
+```
+5. In secrets, add your authentication information:
+```js
+module.exports = {
+  usermame: 'YourUserNameHere'
+  password: 'YourPassWordHere'
+}
+```
+Note: Any valid github account provides full access to the github API.
+
+6. To Run app locally, run:
+```bash
+npm start
 ```
 
 ### Note on API Limit

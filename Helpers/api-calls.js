@@ -44,6 +44,7 @@ module.exports = {
     return rp(requestOptions)
   },
 
+  // TODO:_(still in progess)
   //fixed: type- user; params- location, language
   searchUsers: function (language, location) {
     requestOptions.url='https://api.github.com/search/users?q=language%3A'
