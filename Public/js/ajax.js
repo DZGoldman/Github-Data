@@ -42,6 +42,7 @@ var AJAX = {
   },
 
   getMatches: function (data) {
+    console.log('getting matches:');
       return $.ajax({
         dataType: 'JSON',
         data: {jobsArray: data[0],

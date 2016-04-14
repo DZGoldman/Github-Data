@@ -27,9 +27,10 @@ $(function() {
     read(file, afterRead);
     function afterRead(jobData) {
       var file = upload('talent');
-      read(file, afterRead)
+      read(file, afterRead);
       function afterRead(talentData) {
         var data = [jobData, talentData];
+        console.log(jobData);
         AJAX.getMatches(data)
         .done(AJAX.doneGetMatches)
       }
