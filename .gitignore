@@ -5,3 +5,4 @@ npm-debug.log
 Public/docs/github-skills.csv
 Public/docs/job-matches.csv
 .env
+Public/bower_components

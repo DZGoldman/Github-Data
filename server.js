@@ -32,9 +32,9 @@ var express = require('express'),
 app.use(morgan('combined'));
 
 //home route
-// app.get('/', function(req, res) {
-//   res.send('landing page')
-// });
+app.get('/', function(req, res) {
+  res.send('landing page')
+});
 
 //route for testing thiings out
 app.get('/playground', function (req, res) {
