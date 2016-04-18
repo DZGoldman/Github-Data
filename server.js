@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({silent: true});
 
 console.log('db???',process.env.DATABASE_URL);
 var express = require('express'),
