@@ -1,4 +1,6 @@
 require('dotenv').config();
+
+console.log('db???',process.env.DATABASE_URL);
 var express = require('express'),
   app = express(),
   morgan = require('morgan'),
