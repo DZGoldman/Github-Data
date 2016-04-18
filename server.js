@@ -4,9 +4,9 @@ var express = require('express'),
   pg = require('pg'),
   secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdatacsv', {
+  sequelize = new Sequelize('postgres://localhost/githubdata2copy', {
     dialect: 'postgres',
-    port: 5432
+    port: process.env.PORT || 5432
    }),
   User = sequelize.import(__dirname + "/User"),
   apiCalls = require('./Helpers/api-calls.js'),
@@ -38,7 +38,7 @@ app.get('/playground', function (req, res) {
 });
 
 //Link server:
-app.listen(3000, function() {
+app.listen(process.env.PORT || 3000, function() {
   console.info('Listening on  port 3000...')
 });
 
