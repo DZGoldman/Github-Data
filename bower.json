@@ -1,0 +1,22 @@
+{
+  "name": "vis",
+  "description": "",
+  "main": "server.js[",
+  "authors": [
+    "Daniel Goldman <dzgoldman@wesleyan.edu>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/DZGoldman/Github-Data",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.0",
+    "jquery-csv": "^0.8.1"
+  }
+}

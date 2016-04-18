@@ -1,4 +1,3 @@
-bower_components
 node_modules
 Helpers/otherroutes.js
 secrets.js
@@ -6,3 +5,4 @@ githubdata2.sql
 npm-debug.log
 Public/docs/github-skills.csv
 Public/docs/job-matches.csv
+Public/bower_components
