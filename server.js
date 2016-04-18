@@ -4,7 +4,7 @@ var express = require('express'),
   morgan = require('morgan'),
   pg = require('pg'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize('postgres://localhost/githubdata2copy', {
+  sequelize = new Sequelize(process.env.DATABASE_URL||'postgres://localhost/githubdata2copy', {
     dialect: 'postgres',
     port: process.env.PORT || 5432
    }),
