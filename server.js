@@ -8,7 +8,7 @@ var express = require('express'),
   Sequelize = require('sequelize'),
   sequelize = new Sequelize(process.env.DATABASE_URL||'postgres://localhost/githubdata2copy', {
     dialect: 'postgres',
-    // process.env.PORT || 
+    // process.env.PORT ||
     port: 5432
    }),
   User = sequelize.import(__dirname + "/User"),
@@ -32,9 +32,9 @@ var express = require('express'),
 app.use(morgan('combined'));
 
 //home route
-app.get('/', function(req, res) {
-  res.send('landing page')
-});
+// app.get('/', function(req, res) {
+//   res.send('landing page')
+// });
 
 //route for testing thiings out
 app.get('/playground', function (req, res) {
