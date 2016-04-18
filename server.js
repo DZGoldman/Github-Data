@@ -33,7 +33,7 @@ app.use(morgan('combined'));
 
 //home route
 app.get('/', function(req, res) {
-  res.send('landing page')
+  res.sendFile(__dirname + '/public/index.html')
 });
 
 //route for testing thiings out
