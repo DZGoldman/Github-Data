@@ -1,5 +1,4 @@
 
-console.log('test', process.env.USERNAME);
 var rp = require('request-promise'),
   //parameters for making requests to Github api:
   requestOptions = {
