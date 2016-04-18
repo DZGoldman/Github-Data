@@ -1,17 +1,16 @@
 
-
-var secrets = require('../secrets.js'),
-rp = require('request-promise'),
+console.log('test', process.env.USERNAME);
+var rp = require('request-promise'),
   //parameters for making requests to Github api:
   requestOptions = {
       url: '', //URL to hit
       method: 'GET', //Specify the method
       headers: {
-        'user-agent': secrets.username
+        'user-agent': process.env.USERNAME
       },
       auth: {
-        user: secrets.username,
-        password: secrets.password
+        user: process.env.USERNAME,
+        password: process.env.PASSWORD
       }
     }
   //All requests to the Github api go here:

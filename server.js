@@ -1,8 +1,8 @@
+require('dotenv').config();
 var express = require('express'),
   app = express(),
   morgan = require('morgan'),
   pg = require('pg'),
-  secrets = require('./secrets.js'),
   Sequelize = require('sequelize'),
   sequelize = new Sequelize('postgres://localhost/githubdata2copy', {
     dialect: 'postgres',
@@ -14,6 +14,7 @@ var express = require('express'),
   CronJob = require('cron').CronJob,
   fs = require ('fs'),
   bodyParser = require('body-parser');
+
 
   app.use(  express.static(__dirname+'/public'));
   app.use(bodyParser())
@@ -34,7 +35,7 @@ app.get('/', function(req, res) {
 
 //route for testing thiings out
 app.get('/playground', function (req, res) {
-  res.download('users.csv')
+  // console.log(typeof process.env.TEST);
 });
 
 //Link server:
