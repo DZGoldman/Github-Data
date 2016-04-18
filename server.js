@@ -19,7 +19,7 @@ var express = require('express'),
   bodyParser = require('body-parser');
 
 
-  app.use(  express.static(__dirname+'/public'));
+  app.use(  express.static(__dirname+'/Public'));
   app.use(bodyParser())
 
   //Sync all tables in database:
@@ -33,7 +33,7 @@ app.use(morgan('combined'));
 
 //home route
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/public/index.html')
+  res.sendFile(__dirname + '/Public/index.html')
 });
 
 //route for testing thiings out
