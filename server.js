@@ -8,7 +8,8 @@ var express = require('express'),
   Sequelize = require('sequelize'),
   sequelize = new Sequelize(process.env.DATABASE_URL||'postgres://localhost/githubdata2copy', {
     dialect: 'postgres',
-    port: process.env.PORT || 5432
+    // process.env.PORT || 
+    port: 5432
    }),
   User = sequelize.import(__dirname + "/User"),
   apiCalls = require('./Helpers/api-calls.js'),
