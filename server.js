@@ -1,12 +1,11 @@
 require('dotenv').config({silent: true});
 
-console.log('db???',process.env.DATABASE_URL);
 var express = require('express'),
   app = express(),
   morgan = require('morgan'),
   pg = require('pg'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize(process.env.DATABASE_URL||'postgres://localhost/githubdata2copy', {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     // process.env.PORT ||
     port: 5432
@@ -17,7 +16,6 @@ var express = require('express'),
   CronJob = require('cron').CronJob,
   fs = require ('fs'),
   bodyParser = require('body-parser');
-
 
   app.use(  express.static(__dirname+'/Public'));
   app.use(bodyParser())
@@ -42,8 +40,8 @@ app.get('/playground', function (req, res) {
 });
 
 //Link server:
-app.listen(process.env.PORT || 3000, function() {
-  console.info('Listening on  port 3000...')
+app.listen(process.env.PORT, function() {
+  console.info('Listening on  port ' + process.env.PORT)
 });
 
 //Link up route files:

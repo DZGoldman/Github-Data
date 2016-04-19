@@ -31,20 +31,20 @@ SELECT emails, giturl FROM users WHERE skills @> '{JavaScript, Ruby}'::text[] LI
 ```bash
 npm install
 ```
-4. Create a secrets.js file in root directory:
+and
 ```bash
-touch secrets.js
+bower install
 ```
-5. In secrets, add your authentication information:
-```js
-module.exports = {
-  usermame: 'YourUserNameHere'
-  password: 'YourPassWordHere'
-}
+4. Set environmental variables:
 ```
-Note: Any valid github account provides full access to the github API.
+USERNAME = (your Github user-name)
+PASSWORD = (your Github password)
+PORT = (port)
+DATABASE_URL = (database url)
+```
+Note: If the app is being run locally, the environmental variables can be set by creating a .env file in the app's root directory.
 
-6. To Run app locally, run:
+5. To run app locally, run:
 ```bash
 npm start
 ```
@@ -60,7 +60,7 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - **fs**: Creating CSV file for download
 - **Node-Cron**: Cron job for initial data-scrape (not currently actively used by the app)
 - **Natural**: Implementation of Jaro Winkler distance algorithm for inexact string matching
-
+- **DotEnv**: Setting/getting environmental varialbes
 ### To Do
 - Searching Github for job matches
-- Properly configure environmental variables for hosting on heroku
+- Fix repeating records issue
