@@ -26,7 +26,7 @@ $(function() {
     var file = upload('jobs');
     read(file, afterRead);
     function afterRead(jobData) {
-      var file = upload('talent');
+      var file = upload('match');
       read(file, afterRead);
       function afterRead(talentData) {
         var data = [jobData, talentData];

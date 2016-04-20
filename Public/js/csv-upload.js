@@ -19,7 +19,11 @@
         var file = $('#userFileUpload')[0];
       } else if (source == 'jobs') {
         var file = $('#jobsFileUpload')[0];
-      } else {
+      } else if(source =='match') {
+        var file = $('#userMatchUpload')[0];
+      }
+
+      else {
         return 'something is wrong here...'
       }
       var file = file.files[0];
