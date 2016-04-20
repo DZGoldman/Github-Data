@@ -22,3 +22,7 @@ button{
 body{
   padding: 20px
 }
+
+.type, input{
+  display:inline
+}

@@ -10,8 +10,6 @@
 
 <body>
 
-  <br>
-  <br>
 
   <div id="dvImportSegments" class="fileupload ">
     <fieldset>
@@ -26,19 +24,37 @@
     <br>
     <br>
     <br>
-    <br>
+
 
     <fieldset>
       <legend>Upload Jobs CSV</legend>
-      <div>Job File:</div>
+      <div class='type'>Job File:</div>
       <input type="file" name="File Upload" id="jobsFileUpload" accept=".csv" />
-        <div>Talent File</div>
+        <div class='type'>Talent File</div>
       <input type="file" name="File Upload" id="userMatchUpload" accept=".csv" />
 
       <br>
       <button class='jobs-buttons btn btn-primary' id='compare'>Find Matches</button>
 
     </fieldset>
+
+    <br>
+    <br>
+    <br>
+
+
+    <fieldset>
+      <legend>Search Github</legend>
+
+      <input type="text" placeholder='Language'  id="search-language" />
+      <input type="text" placeholder='Location'  id="search-location" accept=".csv" />
+      <input type="text" placeholder='Limit'  id="search-limit" accept=".csv" />
+
+      <br> <br>
+      <button class='jobs-buttons btn btn-primary' id='search'>Search for Talent</button>
+
+    </fieldset>
+
     <br>
     <br>
     <a id='download-talent-link' href="/docs/github-skills.csv" download>Download Github User CSV</a>

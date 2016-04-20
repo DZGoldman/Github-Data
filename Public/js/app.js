@@ -36,6 +36,15 @@ $(function() {
       }
     };
   });
+
+  $('#search').click(function () {
+    var language = $('#search-language').text();
+    var location = $('#search-location').text();
+    var limit = $('#search-limit').text();
+
+    AJAX.searchGithub(language, location, limit)
+    .done(AJAX.doneSearchGithub)
+  })
   //Old: hide shows buttons, still may eventually use
   // function showButtons(evt) {
   //   console.log('update');

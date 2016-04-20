@@ -56,5 +56,11 @@ var AJAX = {
     console.log('done getting matches');
     alert('Job Matches Found and Ready to download!')
     $('#download-matches-link').show()
+  },
+  searchGithub: function (language, location, limit) {
+    console.log('searching Github');
+  },
+  doneSearchGithub: function (data) {
+    console.log('done searching github!');
   }
 } // end AJAX module
