@@ -58,7 +58,18 @@ var AJAX = {
     $('#download-matches-link').show()
   },
   searchGithub: function (language, location, limit) {
-    console.log('searching Github');
+    console.log('searching Github', language, location, limit);
+    $('#results').text('searching Github')
+    return $.ajax({
+      dataType: 'JSON',
+      data: {
+        language: language,
+        location: location,
+        limit, limit
+    },
+      type: 'POST',
+      url: '/searchusersd'
+    })
   },
   doneSearchGithub: function (data) {
     console.log('done searching github!');
