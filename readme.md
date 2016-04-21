@@ -19,10 +19,17 @@ Github-Data is an application for uploading, analyzing, and exporting data of Gi
 - **Database** The runs on top of a postgreSQL database of roughly 150,000 Github users. The data saved into the database is authenticated for valid Github url and valid email. The data-structure and data-types can be seen in the User.js file in the apps root directory.
 
   - Sample query:
-*Show the Email address and Github urls of  100 users that have both JavaScript and Ruby as skills:*
+*Show the Email address and Github urls of  100 users that have JavaScript, Ruby, and Python as skills:*
 
 ```sql
-SELECT emails, giturl FROM users WHERE skills @> '{JavaScript, Ruby}'::text[] LIMIT 100;
+SELECT email, giturl FROM users WHERE skills @> '{JavaScript, Ruby, Python}'::text[] LIMIT 100;
+```
+- Sample query:
+*Show the username and programming languages (skills) and Github urls of  100 users within 20 miles of Liquid Talent's New York Office*
+
+```sql
+SELECT username, skills FROM users WHERE distance_from_lt<20 LIMIT 100;
+
 ```
 
 
@@ -66,9 +73,10 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - **DotEnv**: Setting/getting environmental variables
 
 ##### Client Side:
+- **jQuery**
 - **jQuery-csv**: CSV uploading and parsing
 - **spin.js**: Loading icon
-- **jQuery**
+
 
 ### Potential Add-Ons
 - Front-end interface for retrieving records / exporing CSV from the database.
@@ -76,4 +84,4 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 
 ### To Do
 - Fix repeating records issue
-- Get location and email data if blank
+- Get location and email data if blank (for saving into db)
