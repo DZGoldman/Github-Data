@@ -14,6 +14,8 @@ Github-Data is an application for uploading, analyzing, and exporting data of Gi
 
 (*link file here*)
 
+- **Seaching Github** Github users can be found directly from Github's API based on programming language and location search parameters. The results are exported as a CSV file (included each User's skills) in the same format as shown above. A search will return a Maximum of 100 results; only users with a public email address are included.
+
 - **Database** The runs on top of a postgreSQL database of roughly 150,000 Github users. The data saved into the database is authenticated for valid Github url and valid email. The data-structure and data-types can be seen in the User.js file in the apps root directory.
 
   - Sample query:
@@ -52,18 +54,26 @@ npm start
 ### Note on API Limit
 Gathering a user's skills requires a single request to Github's API. The rate limit for an authenticated user of the API is 5000 requests per hour. The current status of the app's rate limit can be retrieved by hitting the '/API/ratelimit' route.
 
-#### Technologies Used:
+#### Technologies Used
+##### Server Side:
 - **Node-Express (with Morgan and Body-parser)**
 - **PostgreSQL/ PG/ Sequelize**
-- **Request-Promise**: Hitting Github API
-- **json2csv / jQuery-csv**: CSV uploading and parsing
-- **fs**: Creating CSV file for download
+- **Request-Promise**:  Github API requests
+- **json2csv** CSV parsing
+- **fs**: Creating CSV file creation
 - **Node-Cron**: Cron job for initial data-scrape (not currently actively used by the app)
 - **Natural**: Implementation of Jaro Winkler distance algorithm for inexact string matching
-- **DotEnv**: Setting/getting environmental varialbes
+- **DotEnv**: Setting/getting environmental variables
+
+##### Client Side:
+- **jQuery-csv**: CSV uploading and parsing
+- **spin.js**: Loading icon
+- **jQuery**
+
+### Potential Add-Ons
+- Front-end interface for retrieving records / exporing CSV from the database.
+- "Job" table in database.
 
 ### To Do
 - Fix repeating records issue
 - Get location and email data if blank
-- loading icon
-- only export if email exists?
