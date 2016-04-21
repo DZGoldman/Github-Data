@@ -57,18 +57,19 @@
 
     <br>
     <br>
-    <a id='download-talent-link' href="/docs/github-skills.csv" download>Download Github User CSV</a>
-    <a id='download-matches-link' href="/docs/job-matches.csv" download>Download Job Matches CSV</a>
-    <a id='download-search-results-link' href="/docs/search-results.csv" download>Download Search Results CSV</a>
+    <a id='download-talent-link' class='downloaded-file' href="/docs/github-skills.csv" download>Download Github User CSV</a>
+    <a id='download-matches-link' class='downloaded-file'  href="/docs/job-matches.csv" download>Download Job Matches CSV</a>
+    <a id='download-search-results-link' class='downloaded-file' href="/docs/search-results.csv" download>Download Search Results CSV</a>
 
 
   </div>
-
+<div id=spinner></div>
   <ol type='1' id='results'>
 
   </ol>
   <script src='bower_components/jquery/dist/jquery.js'></script>
   <script src='bower_components/jquery-csv/src/jquery.csv.js'></script>
+    <script src='bower_components/spin.js/spin.js'></script>
   <script src='js/ajax.js'></script>
   <script src='js/csv-upload.js'></script>
   <script src='js/app.js'></script>

@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "jquery": "^2.2.0",
-    "jquery-csv": "^0.8.1"
+    "jquery-csv": "^0.8.1",
+    "spin.js": "^2.3.2"
   }
 }

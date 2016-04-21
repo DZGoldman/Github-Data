@@ -61,10 +61,9 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - **Node-Cron**: Cron job for initial data-scrape (not currently actively used by the app)
 - **Natural**: Implementation of Jaro Winkler distance algorithm for inexact string matching
 - **DotEnv**: Setting/getting environmental varialbes
+
 ### To Do
-- Searching Github for job matches
 - Fix repeating records issue
-- Allow search to account for spaces
 - Get location and email data if blank
 - loading icon
 - only export if email exists?

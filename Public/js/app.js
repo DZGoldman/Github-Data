@@ -52,7 +52,10 @@ $(function() {
     if (!limit) limit=100;
     AJAX.searchGithub(language, location, limit)
     .done(AJAX.doneSearchGithub)
-  })
+  });
+
+
+
   //Old: hide shows buttons, still may eventually use
   // function showButtons(evt) {
   //   console.log('update');
@@ -73,3 +76,6 @@ $(function() {
     // $('#jobsFileUpload').change(showButtons)
 
 })
+var spinner = new Spinner({
+  position: 'relative'
+}).spin( document.getElementById('spinner'));

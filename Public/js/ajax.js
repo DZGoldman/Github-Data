@@ -1,79 +1,97 @@
-
 // all AJAX requests and their 'done' promises live here:
 var AJAX = {
-  saveToDb: function(data) {
-    $('#results').text('Gathering skills and saving into database...')
-    return $.ajax({
-      dataType: 'JSON',
-      data: {data: data},
-      type: 'POST',
-      url: '/upload'
-    })
-  },
-
-  doneSaveToDb: function(data) {
-    $('#results').empty();
-    if (data.length == 0) {
-      alert('All users successfully added with their skills!!')
-    } else {
-      alert(String(data.length) + ' of the users failed to upload. See page for errors...)')
-      data.forEach(function(error) {
-        var $li = $('<li>');
-        $li.text(error);
-        $('#results').append($li);
-      })
-    }
-  },
-
-  exportCSV: function(data, option) {
-    $('#results').text('gathering skills and generating new CSV...')
-    return $.ajax({
-      dataType: 'JSON',
-      data: {data: data},
-      type: 'POST',
-      url: '/export-csv/'+option
-    })
-  },
-
-  doneExportCSV: function(data) {
-    alert('CSV with skills created and ready for downloading!')
-    alert('CSV with skills created and ready for downloading!')
-    $('#download-talent-link').show()
-  },
-
-  getMatches: function (data) {
-    console.log('getting matches:');
+    that: this,
+    saveToDb: function(data) {
+      $('#spinner').show();
+      $('#results').text('Gathering skills and saving users into database...')
       return $.ajax({
         dataType: 'JSON',
-        data: {jobsArray: data[0],
-              talentArray: data[1]
-          },
+        data: {
+          data: data
+        },
+        type: 'POST',
+        url: '/upload'
+      })
+    },
+
+    doneSaveToDb: function(data) {
+      AJAX.clear();
+      if (data.length == 0) {
+        alert('All users successfully added with their skills!!')
+      } else {
+        alert(String(data.length) + ' of the users failed to upload. See page for errors...)')
+        data.forEach(function(error) {
+          var $li = $('<li>');
+          $li.text(error);
+          $('#results').append($li);
+        })
+      }
+    },
+
+    exportCSV: function(data, option) {
+      $('#spinner').show();
+      $('#results').text('Gathering skills and generating new CSV...');
+      return $.ajax({
+        dataType: 'JSON',
+        data: {
+          data: data
+        },
+        type: 'POST',
+        url: '/export-csv/' + option
+      })
+    },
+
+    doneExportCSV: function(data) {
+      AJAX.clear();
+      alert('CSV with skills created and ready for downloading!')
+      $('#download-talent-link').show()
+    },
+
+    getMatches: function(data) {
+      $('#spinner').show();
+      console.log('getting matches:');
+      return $.ajax({
+        dataType: 'JSON',
+        data: {
+          jobsArray: data[0],
+          talentArray: data[1]
+        },
         type: 'POST',
         url: '/getMatches'
       })
-  },
-  doneGetMatches: function (data) {
-    console.log('done getting matches');
-    alert('Job Matches Found and Ready to download!')
-    $('#download-matches-link').show()
-  },
-  searchGithub: function (language, location, limit) {
-    console.log('searching Github', language, location, limit);
-    $('#results').text('searching Github...')
-    return $.ajax({
-      dataType: 'JSON',
-      data: {
-        language: language,
-        location: location,
-        limit, limit
     },
-      type: 'POST',
-      url: '/searchusers'
-    })
-  },
-  doneSearchGithub: function (data) {
-    alert('CSV with skills created and ready for downloading!');
-    $('#results').empty();
-    $('#download-search-results-link').show();
-  }
-} // end AJAX module
+
+    doneGetMatches: function(data) {
+      AJAX.clear();
+      alert('Job Matches Found and Ready to download!')
+      $('#download-matches-link').show()
+    },
+
+    searchGithub: function(language, location, limit) {
+      $('#spinner').show();
+      $('#results').text('Searching Github for users...')
+      return $.ajax({
+        dataType: 'JSON',
+        data: {
+          language: language,
+          location: location,
+          limit,
+          limit
+        },
+        type: 'POST',
+        url: '/searchusers'
+      })
+    },
+
+    doneSearchGithub: function(data) {
+      AJAX.clear();
+      alert('Search results CSV ready to download!');
+      $('#download-search-results-link').show();
+    },
+    
+    clear: function() {
+      $('.downloaded-file').hide();
+      $('#results').empty();
+      $('#spinner').hide();
+    }
+  } // end AJAX module

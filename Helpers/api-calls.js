@@ -51,7 +51,7 @@ module.exports = {
   searchUsers: function (language, location) {
     requestOptions.url='https://api.github.com/search/users?q=language%3A'
     +language+'+location%3A'
-    +location+'&type=Users';
+    +location+'&type=Users?page=2&per_page=100';
     console.log(requestOptions.url);
     return rp(requestOptions)
     //check if hirable?
