@@ -6,30 +6,31 @@ module.exports.controller = function(app, User) {
     var language = req.body.language;
     var location = req.body.location;
     var limit = req.body.limit;
-
+    console.log(language, location, limit);
     //search github api based on parameters:
     apiCalls.searchUsers(language, location)
       .then(function(data) {
-        var resultsCSV = [];
-        //TODO
-        limit = Math.min(limit, data.totalItems);
-
-        function createRow(index) {
-          //toDO
-          // data[index] ...
-
-
-
-
-          if (index<limit) {
-            createRow(index+1)
-          }else{
-            CSVHelpers.saveAsCSV(resultsCSV, './Public/docs/search-results.csv', res)
-          }
-        };
-
-        createRow(0)
-
+        res.send(data)
+        // var resultsCSV = [];
+        // //TODO
+        // limit = Math.min(limit, data.totalItems);
+        //
+        // function createRow(index) {
+        //   //toDO
+        //   // data[index] ...
+        //
+        //
+        //
+        //
+        //   if (index<limit) {
+        //     createRow(index+1)
+        //   }else{
+        //     CSVHelpers.saveAsCSV(resultsCSV, './Public/docs/search-results.csv', res)
+        //   }
+        // };
+        //
+        // createRow(0)
+        //
 
 
 
