@@ -65,3 +65,6 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - Searching Github for job matches
 - Fix repeating records issue
 - Allow search to account for spaces
+- Get location and email data if blank
+- loading icon
+- only export if email exists?
