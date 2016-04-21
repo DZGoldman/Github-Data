@@ -41,6 +41,10 @@ $(function() {
     var language = $('#search-language').val().trim();
     var location = $('#search-location').val().trim();
     var limit = $('#search-limit').val().trim();
+
+    location = '"'+location.replace(/ /g,"+")+'"';
+    language = '"'+language.replace(/ /g,"+")+'"';
+
     if (!language || !location) {
       alert("Fill out both 'Language' and 'Location' boxes");
       return false
