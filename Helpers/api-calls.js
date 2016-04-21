@@ -22,6 +22,10 @@ module.exports = {
         res.send(data)
       })
   },
+  goToUrl: function (url) {
+    requestOptions.url = url;
+    return rp(requestOptions)
+  },
   getReposByGitName: function(username) {
     requestOptions.url = 'https://api.github.com/users/' + username + '/repos';
     return rp(requestOptions)
@@ -48,10 +52,9 @@ module.exports = {
     requestOptions.url='https://api.github.com/search/users?q=language%3A'
     +language+'+location%3A'
     +location+'&type=Users';
-
+    console.log(requestOptions.url);
     return rp(requestOptions)
     //check if hirable?
-
   }
 
 } // end module
