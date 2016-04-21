@@ -28,11 +28,14 @@
 
     <fieldset>
       <legend>Upload Jobs CSV</legend>
-      <div class='type'>Job File:</div>
-      <input type="file" name="File Upload" id="jobsFileUpload" accept=".csv" />
-        <div class='type'>Talent File</div>
-      <input type="file" name="File Upload" id="userMatchUpload" accept=".csv" />
 
+      <div class='match-container'>
+        <div class='type match-row'>Job File:</div>
+        <input class='match-row' type="file" name="File Upload" id="jobsFileUpload" accept=".csv" />
+        <br>
+        <div class='type match-row'>Talent File:</div>
+        <input class='match-row' type="file" name="File Upload" id="userMatchUpload" accept=".csv" />
+      </div>
       <br>
       <button class='jobs-buttons btn btn-primary' id='compare'>Find Matches</button>
 
@@ -46,11 +49,12 @@
     <fieldset>
       <legend>Search Github</legend>
 
-      <input type="text" placeholder='Language'  id="search-language" />
-      <input type="text" placeholder='Location'  id="search-location" accept=".csv" />
-      <input type="text" placeholder='Limit (default:100)'  id="search-limit" accept=".csv" />
+      <input type="text" placeholder='Language' id="search-language" />
+      <input type="text" placeholder='Location' id="search-location" accept=".csv" />
+      <input type="text" placeholder='Limit (default:100)' id="search-limit" accept=".csv" />
 
-      <br> <br>
+      <br>
+      <br>
       <button class='jobs-buttons btn btn-primary' id='search'>Search for Talent</button>
 
     </fieldset>
@@ -58,18 +62,18 @@
     <br>
     <br>
     <a id='download-talent-link' class='downloaded-file' href="/docs/github-skills.csv" download>Download Github User CSV</a>
-    <a id='download-matches-link' class='downloaded-file'  href="/docs/job-matches.csv" download>Download Job Matches CSV</a>
+    <a id='download-matches-link' class='downloaded-file' href="/docs/job-matches.csv" download>Download Job Matches CSV</a>
     <a id='download-search-results-link' class='downloaded-file' href="/docs/search-results.csv" download>Download Search Results CSV</a>
 
 
   </div>
-<div id=spinner></div>
+  <div id=spinner></div>
   <ol type='1' id='results'>
 
   </ol>
   <script src='bower_components/jquery/dist/jquery.js'></script>
   <script src='bower_components/jquery-csv/src/jquery.csv.js'></script>
-    <script src='bower_components/spin.js/spin.js'></script>
+  <script src='bower_components/spin.js/spin.js'></script>
   <script src='js/ajax.js'></script>
   <script src='js/csv-upload.js'></script>
   <script src='js/app.js'></script>

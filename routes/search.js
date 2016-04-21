@@ -12,8 +12,9 @@ module.exports.controller = function(app, User) {
     apiCalls.searchUsers(language, location)
       .then(function(data) {
         var data = JSON.parse(data);
+        var total = data.items.length
         var resultsCSV = [];
-        limit = Math.min(limit, data.total_count);
+        limit = Math.min(limit, total);
 
         function createRow(index) {
           var userResult = data.items[index];
@@ -23,9 +24,14 @@ module.exports.controller = function(app, User) {
           apiCalls.goToUrl(userResult.url)
             .then(function(data) {
               var data = JSON.parse(data);
-              if (userCSV.username) userCSV.username= data.name;
-              if (userCSV.location) userCSV.location= data.location;
-              if (data.email) userCSV.email = data.email;
+              if (data.name) userCSV.username = data.name;
+              if (data.location) userCSV.location = data.location;
+              if (data.email) {
+                userCSV.email = data.email
+              } else {
+                return recurIfNotDone()
+              }
+
               apiCalls.getReposByGitName(userResult.login)
                 .then(function(data) {
                   var repos = JSON.parse(data)
@@ -33,18 +39,8 @@ module.exports.controller = function(app, User) {
                   console.log(skills);
                   userCSV.skills = skills;
                   resultsCSV.push(userCSV);
-
-
                   // at repos
                   return recurIfNotDone()
-
-                  function recurIfNotDone() {
-                    if (index < limit - 1) {
-                      return createRow(index + 1)
-                    } else {
-                      CSVHelpers.saveAsCSV(resultsCSV, './Public/docs/search-results.csv', res)
-                    }
-                  }
 
 
                 })
@@ -52,7 +48,15 @@ module.exports.controller = function(app, User) {
             })
             .catch(function(error) {
               throw error
-            })
+            });
+
+          function recurIfNotDone() {
+            if ( (resultsCSV.length < limit)  && (index< total-1 ) ) {
+              return createRow(index + 1)
+            } else {
+              CSVHelpers.saveAsCSV(resultsCSV, './Public/docs/search-results.csv', res)
+            }
+          }
         };
         createRow(0)
       })

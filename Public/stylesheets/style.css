@@ -30,3 +30,8 @@ body{
 #spinner{
   display: none
 }
+
+.match-row{
+  display: inline !important
+
+}
