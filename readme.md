@@ -64,3 +64,4 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 ### To Do
 - Searching Github for job matches
 - Fix repeating records issue
+- Allow search to account for spaces

@@ -7,7 +7,7 @@ body{
   color: red;
 }
 
-#download-matches-link, #download-talent-link {
+#download-matches-link, #download-talent-link, #download-search-results-link {
   display: none;
 }
 

@@ -37,7 +37,7 @@ var AJAX = {
 
   doneExportCSV: function(data) {
     alert('CSV with skills created and ready for downloading!')
-    $('#results').empty();
+    alert('CSV with skills created and ready for downloading!')
     $('#download-talent-link').show()
   },
 
@@ -59,7 +59,7 @@ var AJAX = {
   },
   searchGithub: function (language, location, limit) {
     console.log('searching Github', language, location, limit);
-    $('#results').text('searching Github')
+    $('#results').text('searching Github...')
     return $.ajax({
       dataType: 'JSON',
       data: {
@@ -68,10 +68,12 @@ var AJAX = {
         limit, limit
     },
       type: 'POST',
-      url: '/searchusersd'
+      url: '/searchusers'
     })
   },
   doneSearchGithub: function (data) {
-    console.log('done searching github!');
+    alert('CSV with skills created and ready for downloading!');
+    $('#results').empty();
+    $('#download-search-results-link').show();
   }
 } // end AJAX module
