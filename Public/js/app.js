@@ -41,14 +41,14 @@ $(function() {
     var language = $('#search-language').val().trim();
     var location = $('#search-location').val().trim();
     var limit = $('#search-limit').val().trim();
-
+    if (!language || !location) {
+      return alert("Fill out both 'Language' and 'Location' boxes");
+       
+    };
     location = '"'+location.replace(/ /g,"+")+'"';
     language = '"'+language.replace(/ /g,"+")+'"';
+    console.log(language, location);
 
-    if (!language || !location) {
-      alert("Fill out both 'Language' and 'Location' boxes");
-      return false
-    };
     if (!limit) limit=100;
     AJAX.searchGithub(language, location, limit)
     .done(AJAX.doneSearchGithub)

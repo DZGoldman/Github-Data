@@ -15,7 +15,12 @@ module.exports.controller = function(app, User) {
         var total = data.items.length
         var resultsCSV = [];
         limit = Math.min(limit, total);
-
+        console.log('limit', 0);
+        if(limit<=0){
+          console.log('limit is 0');
+          res.send([false])
+          return
+        }
         function createRow(index) {
           var userResult = data.items[index];
           if (!userResult) console.log('error', index);

@@ -84,11 +84,14 @@ var AJAX = {
     },
 
     doneSearchGithub: function(data) {
-      AJAX.clear();
+        AJAX.clear();
+      if (data[0]==false) {
+        return alert('No such users were found...')}
+
       alert('Search results CSV ready to download!');
       $('#download-search-results-link').show();
     },
-    
+
     clear: function() {
       $('.downloaded-file').hide();
       $('#results').empty();
