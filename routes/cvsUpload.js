@@ -71,6 +71,10 @@ module.exports.controller =  function (app, User) {
         csvUser.skills = languages
         recurIfNotDone(len, index)
       })
+      .catch(function (error) {
+          console.log(error);
+          recurIfNotDone(len,index)
+          })
     };
 
     addSkills(usersArray, 0)
