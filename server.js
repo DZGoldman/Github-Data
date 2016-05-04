@@ -18,7 +18,10 @@ var express = require('express'),
   bodyParser = require('body-parser');
 
   app.use(  express.static(__dirname+'/Public'));
-  app.use(bodyParser())
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
 
   //Sync all tables in database:
   sequelize.sync().then(function () {
