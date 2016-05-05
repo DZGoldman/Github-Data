@@ -5,7 +5,7 @@ var CSVHelpers = require('../Helpers/csv-helpers.js');
 
 module.exports.controller =  function (app, User, auth) {
 
-  app.post('/upload', auth, function (req, res) {
+  app.post('/upload', function (req, res) {
     var usersArray = req.body.data;
     var len = usersArray.length;
     var index =0;
@@ -50,7 +50,7 @@ module.exports.controller =  function (app, User, auth) {
   })
 
 
-  app.post('/export-csv/:option', auth, function (req, res) {
+  app.post('/export-csv/:option', function (req, res) {
     //options: save or send
     var usersArray = req.body.data;
     var len = usersArray.length;
@@ -95,7 +95,7 @@ module.exports.controller =  function (app, User, auth) {
 
   })
 
-  app.post('/getMatches', auth, function (req, res) {
+  app.post('/getMatches', function (req, res) {
     var jobsArray = req.body.jobsArray;
     var talentArray = req.body.talentArray;
     CSVHelpers.cleanUpSkills(jobsArray);

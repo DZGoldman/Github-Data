@@ -20,17 +20,15 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   session = require('express-session');
 
-app.use(express.static(__dirname + '/Public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(morgan('combined'));
 
-app.use(session({
-  secret: '2C44-4D44-WppQ38S',
-  resave: true,
-  saveUninitialized: true
-}));
+//set public/ views
+app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/Public'));
 
 //Sync all tables in database:
 sequelize.sync().then(function() {
@@ -39,41 +37,60 @@ sequelize.sync().then(function() {
   console.log('table problems');
 })
 
-app.use(morgan('combined'));
+//auth/sessions
+app.use(session({
+  secret: '2C44-4D44-WppQ38S',
+  resave: true,
+  saveUninitialized: true
+}));
 
-//home route
+app.use(unless('/login', auth));
 
-app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/Public/index.html')
-});
-
-var auth = function(req, res, next) {
+function auth(req, res, next) {
   if (req.session && req.session.user === process.env.APP_LOGIN && req.session.admin)
     return next();
   else
-    return res.sendStatus(401);
+    return res.render('login');
 };
 
-app.post('/login', function(req, res) {
-    var username = req.body.email;
-    var password = req.body.password;
-    if (!username || !password) {
-      res.send('login failed');
-    } else if (username === process.env.APP_LOGIN && password === process.env.APP_PASSWORD) {
-      req.session.user = process.env.APP_LOGIN;
-      req.session.admin = true;
-      res.send("login success!");
-    } else{
-      res.send("login failed!");
+function unless(path, middleware) {
+  return function(req, res, next) {
+    if (path === req.path) {
+      return next();
+    } else {
+      return middleware(req, res, next);
     }
-  });
+  };
+};
 
-  app.get('/logout', function (req, res) {
+//routes
+
+app.get('/', function(req, res) {
+    res.render('index');
+});
+
+
+
+app.post('/login', function(req, res) {
+  var username = req.body.email;
+  var password = req.body.password;
+  if (!username || !password) {
+    res.send('login failed');
+  } else if (username === process.env.APP_LOGIN && password === process.env.APP_PASSWORD) {
+    req.session.user = process.env.APP_LOGIN;
+    req.session.admin = true;
+    res.render('index');
+  } else {
+    res.render('login');
+  }
+});
+
+app.get('/logout', function(req, res) {
     req.session.destroy();
-    res.send("logout success!");
+    res.render('login');
   })
   //route for testing thiings out
-app.get('/playground', auth, function(req, res) {
+app.get('/playground', function(req, res) {
   // console.log(typeof process.env.TEST);
   console.log(req.session);
 });
@@ -87,6 +104,6 @@ app.listen(process.env.PORT, function() {
 fs.readdirSync('./routes').forEach(function(file) {
   if (file.substr(-3) == '.js') {
     route = require('./routes/' + file);
-    route.controller(app, User, auth);
+    route.controller(app, User);
   }
 });
