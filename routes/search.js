@@ -2,8 +2,8 @@ var apiCalls = require('../Helpers/api-calls.js'),
   skillsHelpers = require('../Helpers/skills-helpers.js'),
   CSVHelpers = require('../Helpers/csv-helpers.js')
 
-module.exports.controller = function(app, User, auth) {
-  app.post('/searchusers', auth, function(req, res) {
+module.exports.controller = function(app, User) {
+  app.post('/searchusers', function(req, res) {
     var language = req.body.language;
     var location = req.body.location;
     var limit = req.body.limit;

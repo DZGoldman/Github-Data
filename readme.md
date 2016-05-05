@@ -50,6 +50,8 @@ USERNAME = (your Github user-name)
 PASSWORD = (your Github password)
 PORT = (port)
 DATABASE_URL = (database url)
+APP_LOGIN = (Your login for this app)
+APP_PASSWORD = (Your password for this app)
 ```
 Note: If the app is being run locally, the environmental variables can be set by creating a .env file in the app's root directory.
 

@@ -1,0 +1,18 @@
+<html lang="en">
+ <% include partials/head %>
+<body>
+  <form action="/login" method="post">
+         <div class="form-group">
+             <label>Login</label>
+             <input type="text" class="form-control" name="email">
+         </div>
+         <div class="form-group">
+             <label>Password</label>
+             <input type="password" class="form-control" name="password">
+         </div>
+
+         <button type="submit" class="btn btn-primary btn-lg">Login</button>
+     </form>
+<% include partials/footer %>
+</body>
+</html>
