@@ -45,20 +45,18 @@ app.use(session({
 
 app.use(Auth.unless('/login', Auth.auth));
 
-
-app.post('/login',Auth.login );
+app.post('/login', Auth.login );
 
 app.get('/logout', function(req, res) {
     req.session.destroy();
     res.render('login');
   })
 
-//routes
+//home route
 
 app.get('/', function(req, res) {
     res.render('index');
 });
-
 
   //route for testing thiings out
 app.get('/playground', function(req, res) {
