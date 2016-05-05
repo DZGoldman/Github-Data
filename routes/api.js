@@ -1,7 +1,7 @@
 var apiCalls = require('../Helpers/api-calls.js')
 var skillsHelpers = require('../Helpers/skills-helpers.js')
 
-module.exports.controller =  function (app, User, auth) {
+module.exports.controller =  function (app, User) {
 
   //Get current rate limit status (5000 calls per hour)
   app.get('/api/ratelimit', apiCalls.rateLimit);

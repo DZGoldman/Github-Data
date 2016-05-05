@@ -3,7 +3,7 @@ var apiCalls = require('../Helpers/api-calls.js');
 var CSVHelpers = require('../Helpers/csv-helpers.js');
 
 
-module.exports.controller =  function (app, User, auth) {
+module.exports.controller =  function (app, User) {
 
   app.post('/upload', function (req, res) {
     var usersArray = req.body.data;
