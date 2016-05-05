@@ -53,7 +53,6 @@ app.get('/logout', function(req, res) {
   })
 
 //home route
-
 app.get('/', function(req, res) {
     res.render('index');
 });
