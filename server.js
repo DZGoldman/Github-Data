@@ -33,10 +33,16 @@ var express = require('express'),
 app.use(morgan('combined'));
 
 //home route
+
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/Public/index.html')
 });
 
+
+app.post('/login', function (req, res) {
+  console.log(req.body.email);
+  console.log(req.body.password);
+})
 //route for testing thiings out
 app.get('/playground', function (req, res) {
   // console.log(typeof process.env.TEST);

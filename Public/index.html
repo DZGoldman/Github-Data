@@ -9,8 +9,20 @@
 </head>
 
 <body>
+  <form action="/login" method="post">
+         <div class="form-group">
+             <label>Email</label>
+             <input type="text" class="form-control" name="email">
+         </div>
+         <div class="form-group">
+             <label>Password</label>
+             <input type="password" class="form-control" name="password">
+         </div>
 
+         <button type="submit" class="btn btn-primary btn-lg">Login</button>
+     </form>
 
+<div id='app'>
   <div id="dvImportSegments" class="fileupload ">
     <fieldset>
       <legend>Find Skills</legend>
@@ -80,7 +92,7 @@
   <script src='js/ajax.js'></script>
   <script src='js/csv-upload.js'></script>
   <script src='js/app.js'></script>
-
+</div>
 </body>
 
 </html>
