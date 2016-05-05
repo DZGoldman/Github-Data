@@ -1,12 +1,12 @@
 var apiCalls = require('../Helpers/api-calls.js')
 var skillsHelpers = require('../Helpers/skills-helpers.js')
 
-module.exports.controller =  function (app, User) {
+module.exports.controller =  function (app, User, auth) {
 
   //Get current rate limit status (5000 calls per hour)
   app.get('/api/ratelimit', apiCalls.rateLimit);
 
-  app.get('/api/getReposByUsername/:username',function (req,res) {
+  app.get('/api/getReposByUsername/:username', auth, function (req,res) {
     //username is route parameter:
     var userName = req.params.username.trim();
     //request repos from api:
@@ -20,7 +20,7 @@ module.exports.controller =  function (app, User) {
   });
 
 //Skills List: List of primary lanugages in all of the user's repos:
-  app.get('/api/getSkillsListByUsername/:username', function (req,res) {
+  app.get('/api/getSkillsListByUsername/:username', auth, function (req,res) {
     var userName = req.params.username.trim();
     function getLangList (repoData) {
       var repos = JSON.parse(repoData);
@@ -39,7 +39,7 @@ module.exports.controller =  function (app, User) {
   });
 
 //Skills hash: Hash of total bytes of each language in all of user's repos
-  app.get('/api/getSkillsHashByUsername/:username', function (req,res) {
+  app.get('/api/getSkillsHashByUsername/:username', auth, function (req,res) {
     var userName = req.params.username.trim();
     //request repos from api:
     apiCalls.getReposByGitName(userName)
@@ -51,7 +51,7 @@ module.exports.controller =  function (app, User) {
       })
   })
 
-  app.get('/api/getReposByEmail/:email', function (req, res) {
+  app.get('/api/getReposByEmail/:email', auth, function (req, res) {
     var email = req.params.email.trim();
     //Perform search by email from API
     apiCalls.getUserByEmail(email)
@@ -66,7 +66,7 @@ module.exports.controller =  function (app, User) {
       });
   });
 
-  app.get('/api/getSkillsListByEmail/:email', function (req, res) {
+  app.get('/api/getSkillsListByEmail/:email', auth, function (req, res) {
     var email = req.params.email.trim();
         //Perform search by email from API
     apiCalls.getUserByEmail(email)
@@ -84,7 +84,7 @@ module.exports.controller =  function (app, User) {
       });
   });
 
-  app.get('/api/getSkillsHashByEmail/:email', function (req, res) {
+  app.get('/api/getSkillsHashByEmail/:email', auth, function (req, res) {
     var email = req.params.email.trim();
     //Perform search by email from API
     apiCalls.getUserByEmail(email)
