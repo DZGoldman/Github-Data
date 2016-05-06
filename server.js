@@ -12,7 +12,7 @@ var express = require('express'),
     // process.env.PORT ||
     port: 5432
   }),
-  User = sequelize.import(__dirname + "/User"),
+  User = sequelize.import(__dirname + "/Models/User"),
   CronJob = require('cron').CronJob,
   fs = require('fs'),
   bodyParser = require('body-parser'),
@@ -69,9 +69,9 @@ app.listen(process.env.PORT, function() {
 });
 
 //Link up route files:
-fs.readdirSync('./routes').forEach(function(file) {
+fs.readdirSync('./Routes').forEach(function(file) {
   if (file.substr(-3) == '.js') {
-    route = require('./routes/' + file);
+    route = require('./Routes/' + file);
     route.controller(app, User);
   }
 });
