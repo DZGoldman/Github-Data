@@ -53,6 +53,9 @@ module.exports.controller = function(app, User) {
                   resultsCSV.push(userCSV);
                   return recurIfNotDone()
                 })
+                .catch(function(error) {
+                  throw error
+                })
             })
             .catch(function(error) {
               throw error

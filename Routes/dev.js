@@ -2,6 +2,11 @@ var skillsHelpers = require('../Helpers/skills-helpers.js');
 
 module.exports.controller = function(app, User, Github_User) {
 
+  //route for testing thiings out
+app.get('/playground', function(req, res) {
+  console.log('playground route');
+
+});
 
 counter =1
   app.get('/transfer', function(req, res) {
