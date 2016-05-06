@@ -13,6 +13,7 @@ var express = require('express'),
     port: 5432
   }),
   User = sequelize.import(__dirname + "/Models/User"),
+  Github_User = sequelize.import(__dirname + "/Models/Github_User"),
   CronJob = require('cron').CronJob,
   fs = require('fs'),
   bodyParser = require('body-parser'),
@@ -29,11 +30,11 @@ app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/Public'));
 
 //Sync all tables in database:
-sequelize.sync().then(function() {
-  console.log('tables synced');
-}).catch(function() {
-  console.log('table problems');
-})
+// sequelize.sync().then(function() {
+//   console.log('tables synced');
+// }).catch(function() {
+//   console.log('table problems');
+// })
 
 //auth/sessions
 var Auth = require('./Helpers/session-helpers.js')
@@ -59,8 +60,15 @@ app.get('/', function(req, res) {
 
   //route for testing thiings out
 app.get('/playground', function(req, res) {
-  // console.log(typeof process.env.TEST);
-  console.log('yes');
+    var test = Github_User.build();
+    test.username = 'hello';
+    test.save()
+    .then(function () {
+      console.log('good');
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
 });
 
 //Link server:
@@ -72,6 +80,6 @@ app.listen(process.env.PORT, function() {
 fs.readdirSync('./Routes').forEach(function(file) {
   if (file.substr(-3) == '.js') {
     route = require('./Routes/' + file);
-    route.controller(app, User);
+    route.controller(app, User, Github_User);
   }
 });
