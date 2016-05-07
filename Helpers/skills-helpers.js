@@ -7,7 +7,6 @@ var apiCalls = require('./api-calls.js')
    //give User all attributes in CSV
   buildUserFromCSV: function (dbUser, csvUser) {
   for(key in csvUser){
-    console.log('key: ', key );
     var value = csvUser[key]
     if (value) {
       dbUser[key] = value;

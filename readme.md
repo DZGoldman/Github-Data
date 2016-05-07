@@ -85,5 +85,9 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - "Job" table in database.
 
 ### To Do
-- Fix repeating records issue
 - Get location and email data if blank (for saving into db)
+
+- Push sanitaized data to heroku
+- Validate for faulty CSV forms:
+  - Find skills: requires giturl column
+  - Compare: talent and jobs require skills (talent requires email?)
