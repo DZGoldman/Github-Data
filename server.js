@@ -66,6 +66,7 @@ app.get('/', function(req, res) {
 app.listen(process.env.PORT, function() {
   console.info('Listening on  port ' + process.env.PORT)
 });
+console.log('server synced');
 
 //Link up route files:
 fs.readdirSync('./Routes').forEach(function(file) {
