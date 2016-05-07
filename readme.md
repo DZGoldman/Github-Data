@@ -73,6 +73,8 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - **Node-Cron**: Cron job for initial data-scrape (not currently actively used by the app)
 - **Natural**: Implementation of Jaro Winkler distance algorithm for inexact string matching
 - **DotEnv**: Setting/getting environmental variables
+- **Express-Session**: Login / authentication
+- **ejs**: Templating
 
 ##### Client Side:
 - **jQuery**
@@ -81,10 +83,9 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 
 
 ### Potential Add-Ons
-- Front-end interface for retrieving records / exporing CSV from the database.
+- Front-end interface for retrieving records / exporting CSV from the database.
 - "Job" table in database.
 
 ### To Do
 - Get location and email data if blank (for saving into db)
-
-- Push sanitaized data to heroku
+- Push sanitized data to heroku
