@@ -33,15 +33,15 @@ module.exports.controller = function(app, User) {
               .catch(catchError)
           })
           .catch(catchError)
+          
+          function catchError(error) {
+            console.log(error);
+            errors.push(error.message);
+            recurIfNotDone(len, index)
+          };
       };
       saveUser(usersArray, 0)
 
-      //helpers:
-      function catchError(error) {
-        console.log(error);
-        errors.push(error.message);
-        recurIfNotDone(len, index)
-      };
 
       function recurIfNotDone(len, index) {
         if (index < len - 1) {
