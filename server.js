@@ -50,7 +50,12 @@ app.post('/login', Auth.login );
 app.get('/logout', function(req, res) {
     req.session.destroy();
     res.render('login');
-  })
+  });
+
+  app.get('/test', function(req, res) {
+      console.log('testing 1 2 3 ');
+    })
+
 
 //home route
 app.get('/', function(req, res) {

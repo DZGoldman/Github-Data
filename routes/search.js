@@ -3,6 +3,11 @@ var apiCalls = require('../Helpers/api-calls.js'),
   CSVHelpers = require('../Helpers/csv-helpers.js')
 
 module.exports.controller = function(app, User) {
+
+  app.get('/test2', function(req, res) {
+      console.log('testing22222 1 2 3 ');
+    });
+    
   app.post('/searchusers', function(req, res) {
     var language = req.body.language;
     var location = req.body.location;
