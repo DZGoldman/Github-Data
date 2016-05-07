@@ -7,7 +7,7 @@ var express = require('express'),
   morgan = require('morgan'),
   pg = require('pg'),
   Sequelize = require('sequelize'),
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
+  sequelize = new Sequelize(process.env.HEROKU_POSTGRESQL_ONYX_URL|| process.env.DATABASE_URL, {
     dialect: 'postgres',
     // process.env.PORT ||
     port: 5432
