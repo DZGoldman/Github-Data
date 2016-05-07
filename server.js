@@ -69,7 +69,7 @@ app.listen(process.env.PORT, function() {
 console.log('server synced');
 
 //Link up route files:
-fs.readdirSync('./Routes').forEach(function(file) {
+fs.readdirSync('./routes').forEach(function(file) {
   if (file.substr(-3) == '.js') {
     route = require('./Routes/' + file);
     route.controller(app, User);
