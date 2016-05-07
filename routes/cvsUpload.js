@@ -94,10 +94,8 @@ module.exports.controller = function(app, User) {
           } else if (option == 'send') {
             CSVHelpers.sendToClient(usersArray, res)
           }
-
         }
       };
-
     })
 
     app.post('/getMatches', function(req, res) {

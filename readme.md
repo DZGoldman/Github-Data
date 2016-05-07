@@ -22,13 +22,13 @@ Github-Data is an application for uploading, analyzing, and exporting data of Gi
 *Show the Email address and Github urls of  100 users that have JavaScript, Ruby, and Python as skills:*
 
 ```sql
-SELECT email, giturl FROM users WHERE skills @> '{JavaScript, Ruby, Python}'::text[] LIMIT 100;
+SELECT email, giturl FROM github_users WHERE skills @> '{JavaScript, Ruby, Python}'::text[] LIMIT 100;
 ```
 - Sample query:
 *Show the username and programming languages (skills) and Github urls of  100 users within 20 miles of Liquid Talent's New York Office*
 
 ```sql
-SELECT username, skills FROM users WHERE distance_from_lt<20 LIMIT 100;
+SELECT username, skills FROM github_users WHERE distance_from_lt<20 LIMIT 100;
 
 ```
 
@@ -88,6 +88,3 @@ Gathering a user's skills requires a single request to Github's API. The rate li
 - Get location and email data if blank (for saving into db)
 
 - Push sanitaized data to heroku
-- Validate for faulty CSV forms:
-  - Find skills: requires giturl column
-  - Compare: talent and jobs require skills (talent requires email?)

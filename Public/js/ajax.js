@@ -2,6 +2,7 @@
 var AJAX = {
     that: this,
     saveToDb: function(data) {
+      if(!Validate.talentCSV(data)) return false
       $('#spinner').show();
       $('#results').text('Gathering skills and saving users into database...')
       return $.ajax({
@@ -29,6 +30,7 @@ var AJAX = {
     },
 
     exportCSV: function(data, option) {
+      if(!Validate.talentCSV(data)) return false
       $('#spinner').show();
       $('#results').text('Gathering skills and generating new CSV...');
       return $.ajax({
@@ -48,13 +50,16 @@ var AJAX = {
     },
 
     getMatches: function(data) {
+      var jobsArray = data[0], talentArray = data[1];
+      if(!Validate.compareCSV(jobsArray, talentArray)) return false
+
       $('#spinner').show();
       console.log('getting matches:');
       return $.ajax({
         dataType: 'JSON',
         data: {
-          jobsArray: data[0],
-          talentArray: data[1]
+          jobsArray: jobsArray,
+          talentArray: talentArray
         },
         type: 'POST',
         url: '/getMatches'

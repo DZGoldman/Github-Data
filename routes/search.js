@@ -17,7 +17,7 @@ module.exports.controller = function(app, User) {
         //number of users is the limit the searcher provides or just the total
         limit = Math.min(limit, total);
         //stop if none are found
-        if(limit<=0){
+        if (limit <= 0) {
           res.send([false])
           return
         }
@@ -53,17 +53,17 @@ module.exports.controller = function(app, User) {
                   resultsCSV.push(userCSV);
                   return recurIfNotDone()
                 })
-                .catch(function(error) {
-                  throw error
-                })
+                .catch(catchError)
             })
-            .catch(function(error) {
-              throw error
-            });
+            .catch(catchError);
 
+          function catchError(error) {
+            console.log('error', error);
+            return recurIfNotDone()
+          }
           function recurIfNotDone() {
             //if we haven't reached the limit and aren't past the total
-            if ( (resultsCSV.length < limit)  && (index< total-1 ) ) {
+            if ((resultsCSV.length < limit) && (index < total - 1)) {
               return createRow(index + 1)
             } else {
               CSVHelpers.saveAsCSV(resultsCSV, './Public/docs/search-results.csv', res)
@@ -73,7 +73,9 @@ module.exports.controller = function(app, User) {
         createRow(0)
       })
       .catch(function(error) {
-        throw error
+        console.log('error time3');
+        res.send([false])
+          // throw error
       })
 
   })
