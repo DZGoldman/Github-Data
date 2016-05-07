@@ -52,11 +52,6 @@ app.get('/logout', function(req, res) {
     res.render('login');
   });
 
-  app.get('/test', function(req, res) {
-      console.log('testing 1 2 3 ');
-    })
-
-
 //home route
 app.get('/', function(req, res) {
     res.render('index');
